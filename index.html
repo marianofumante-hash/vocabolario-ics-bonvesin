@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocabolario Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="institution-bar">
+          <div class="institution-mark">
+            <p class="institution-name">ICS Bonvesin de la Riva di Legnano</p>
+            <p class="institution-address">Via Bonvesin de la Riva, 1 Legnano -MI-</p>
+          </div>
+          <div class="language-picker hero-language-picker">
+            <label id="ui-language-label" class="language-label" for="language-select">
+              Seleziona il vocabolario
+            </label>
+            <div
+              id="hero-language-options"
+              class="language-options language-options-hero"
+              role="group"
+              aria-labelledby="ui-language-label"
+            ></div>
+            <select id="language-select" class="language-select language-select-hidden"></select>
+          </div>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-copy-block">
+            <h1 id="ui-title">Un primo dizionario web, semplice e pronto da far crescere</h1>
+            <p id="ui-hero-copy" class="hero-copy">
+              Cerca una parola e consulta in tempo reale il contenuto del
+              vocabolario, senza inserire vocaboli a mano.
+            </p>
+          </div>
+          <section
+            class="reading-tools reading-tools-hero"
+            aria-labelledby="ui-reading-tools-title"
+          >
+            <div class="reading-tools-header">
+              <h2 id="ui-reading-tools-title" class="reading-tools-title">Lettura facilitata</h2>
+              <p id="ui-reading-tools-copy" class="reading-tools-copy">
+                Attiva solo quello che ti aiuta a leggere meglio.
+              </p>
+            </div>
+            <div class="reading-tools-grid" role="group" aria-labelledby="ui-reading-tools-title">
+              <button
+                id="pref-large-text"
+                class="preference-button"
+                type="button"
+                aria-pressed="false"
+              >
+                Testo piu' grande
+              </button>
+              <button
+                id="pref-line-spacing"
+                class="preference-button"
+                type="button"
+                aria-pressed="false"
+              >
+                Interlinea maggiore
+              </button>
+              <button
+                id="pref-strong-contrast"
+                class="preference-button"
+                type="button"
+                aria-pressed="false"
+              >
+                Contrasto piu' forte
+              </button>
+            </div>
+          </section>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="search-panel">
+          <label id="ui-search-label" class="search-label" for="search-input">Cerca un vocabolo</label>
+          <div class="search-row">
+            <input
+              id="search-input"
+              class="search-input"
+              type="search"
+              placeholder="Per esempio: casa"
+              autocomplete="off"
+            />
+            <button id="clear-button" class="ghost-button" type="button">
+              Pulisci
+            </button>
+          </div>
+          <p id="search-summary" class="search-summary">
+            Scrivi una parola per cercarla online.
+          </p>
+          <div id="results" class="results" aria-live="polite"></div>
+        </section>
+
+        <section class="entry-panel">
+          <div id="entry-empty" class="entry-empty">
+            <h2 id="ui-empty-title">Nessuna voce selezionata</h2>
+            <p id="ui-empty-copy">
+              Quando scegli un risultato, qui compariranno la definizione e le
+              altre informazioni della parola.
+            </p>
+          </div>
+
+          <article id="entry-card" class="entry-card hidden" aria-live="polite">
+            <div class="entry-header">
+              <div>
+                <p id="entry-pos" class="entry-pos"></p>
+                <h2 id="entry-lemma" class="entry-lemma"></h2>
+                <p id="entry-cache-status" class="entry-cache-status"></p>
+              </div>
+              <div class="entry-header-tools">
+                <div class="language-picker language-picker-compact">
+                  <label id="ui-entry-language-label" class="language-label" for="entry-language-select">
+                    Traduci in:
+                  </label>
+                  <div
+                    id="entry-language-options"
+                    class="language-options language-options-compact"
+                    role="group"
+                    aria-labelledby="ui-entry-language-label"
+                  ></div>
+                  <select
+                    id="entry-language-select"
+                    class="language-select language-select-hidden"
+                  ></select>
+                </div>
+                <p id="entry-pronunciation" class="entry-pronunciation"></p>
+              </div>
+            </div>
+
+            <section class="entry-section">
+              <div class="entry-section-header">
+                <h3 id="ui-entry-content-title">Contenuto della voce</h3>
+                <div class="speech-controls">
+                  <button id="speak-start-button" class="ghost-button" type="button">
+                    Ascolta
+                  </button>
+                  <button id="speak-stop-button" class="ghost-button" type="button">
+                    Stop
+                  </button>
+                </div>
+              </div>
+              <div id="entry-content" class="entry-content"></div>
+            </section>
+
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./ui-languages.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
