@@ -1,0 +1,208 @@
+window.UI_LANGUAGES = [
+  {
+    code: "it",
+    label: "Italiano",
+    strings: {
+      eyebrow: "Vocabolario Online",
+      title: "Vocabolario on line ICS Bonvesin de la Riva",
+      heroCopy:
+        "Ricerca una parola e apri subito la voce con un'interfaccia chiara, veloce e affidabile.",
+      heroLanguageLabel: "Seleziona il vocabolario",
+      entryLanguageLabel: "Traduci in:",
+      searchLabel: "Cerca un vocabolo",
+      readingToolsTitle: "Lettura facilitata",
+      readingToolsCopy: "Attiva solo quello che ti aiuta a leggere meglio.",
+      readingLargeText: "Testo piu' grande",
+      readingLineSpacing: "Interlinea maggiore",
+      readingStrongContrast: "Contrasto piu' forte",
+      searchPlaceholder: "Per esempio: casa",
+      clearButton: "Pulisci",
+      summaryIdle: "Scrivi una parola per cercarla online.",
+      summarySearching: "Ricerca online in corso...",
+      summarySingle: "1 risultato trovato.",
+      summaryMultiple: "{count} risultati trovati.",
+      summaryNoResults: "Nessun risultato trovato.",
+      summarySearchCache:
+        "Risultati caricati dalla cache locale. Ultimo aggiornamento: {time}.",
+      summarySearchFallback:
+        "Ricerca live non disponibile. Sto mostrando i risultati salvati il {time}.",
+      summarySearchOffline: "La ricerca online non e' disponibile in questo momento.",
+      summarySingleWordOnly: "Inserisci una sola parola alla volta.",
+      emptyTitle: "Nessuna voce selezionata",
+      emptyCopy:
+        "Quando scegli un risultato, qui compariranno la definizione e le altre informazioni della parola.",
+      entryContentTitle: "Contenuto della voce",
+      primaryDefinitionLabel: "Definizione principale",
+      speakStart: "Ascolta",
+      speakStop: "Stop",
+      entryOnline: "",
+      resultOnline: '"{query}"',
+      resultGeneric: "Voce",
+      cacheShowing:
+        "Visualizzazione da cache locale. Ultimo aggiornamento: {time}.",
+      cacheLoading:
+        "Nessuna copia locale disponibile. Caricamento online in corso.",
+      cacheUpdated: "Voce aggiornata online e salvata nella cache locale.",
+      cacheFallback:
+        "Connessione non disponibile. Sto mostrando la copia locale salvata il {time}.",
+      cacheMissing: "Nessuna cache locale disponibile per questa voce.",
+      entryLoading: "Caricamento della voce in corso...",
+      translationLoading: "Traduzione del contenuto in corso...",
+      entryUnavailable:
+        "Non sono riuscito a caricare questa voce online in questo momento.",
+      entryEmpty: "Nessun contenuto disponibile."
+    }
+  },
+  {
+    code: "en",
+    label: "Inglese",
+    strings: {
+      eyebrow: "Online Dictionary",
+      title: "A simple web dictionary, ready to grow",
+      heroCopy:
+        "Search for a word and consult the dictionary content in real time, without entering vocabulary manually.",
+      heroLanguageLabel: "Select the dictionary",
+      entryLanguageLabel: "Translate into:",
+      searchLabel: "Search for a word",
+      readingToolsTitle: "Reading Support",
+      readingToolsCopy: "Turn on only what helps you read better.",
+      readingLargeText: "Larger text",
+      readingLineSpacing: "More line spacing",
+      readingStrongContrast: "Higher contrast",
+      searchPlaceholder: "For example: casa",
+      clearButton: "Clear",
+      summaryIdle: "Type a word to search online.",
+      summarySearching: "Online search in progress...",
+      summarySingle: "1 result found.",
+      summaryMultiple: "{count} results found.",
+      summaryNoResults: "No results found.",
+      summarySearchCache: "Results loaded from local cache. Last update: {time}.",
+      summarySearchFallback:
+        "Live search is unavailable. Showing results saved on {time}.",
+      summarySearchOffline: "Online search is not available right now.",
+      summarySingleWordOnly: "Enter one word at a time.",
+      emptyTitle: "No entry selected",
+      emptyCopy:
+        "When you choose a result, the definition and other information about the word will appear here.",
+      entryContentTitle: "Entry content",
+      primaryDefinitionLabel: "Main definition",
+      speakStart: "Listen",
+      speakStop: "Stop",
+      entryOnline: "",
+      resultOnline: '"{query}"',
+      resultGeneric: "Entry",
+      cacheShowing: "Showing local cache. Last update: {time}.",
+      cacheLoading: "No local copy available. Loading online.",
+      cacheUpdated: "Entry updated online and saved to local cache.",
+      cacheFallback:
+        "Connection unavailable. Showing the local copy saved on {time}.",
+      cacheMissing: "No local cache available for this entry.",
+      entryLoading: "Loading entry...",
+      translationLoading: "Translating content...",
+      entryUnavailable: "I could not load this entry online right now.",
+      entryEmpty: "No content available."
+    }
+  },
+  {
+    code: "fr",
+    label: "Francese",
+    strings: {
+      eyebrow: "Dictionnaire en ligne",
+      title: "Un dictionnaire web simple, pret a evoluer",
+      heroCopy:
+        "Recherchez un mot et consultez en temps reel le contenu du dictionnaire, sans saisir les mots a la main.",
+      heroLanguageLabel: "Selectionnez le dictionnaire",
+      entryLanguageLabel: "Traduire en :",
+      searchLabel: "Rechercher un mot",
+      readingToolsTitle: "Lecture facilitee",
+      readingToolsCopy: "Active seulement ce qui t'aide a mieux lire.",
+      readingLargeText: "Texte plus grand",
+      readingLineSpacing: "Interligne plus grand",
+      readingStrongContrast: "Contraste plus fort",
+      searchPlaceholder: "Par exemple : casa",
+      clearButton: "Effacer",
+      summaryIdle: "Tapez un mot pour le rechercher en ligne.",
+      summarySearching: "Recherche en ligne en cours...",
+      summarySingle: "1 resultat trouve.",
+      summaryMultiple: "{count} resultats trouves.",
+      summaryNoResults: "Aucun resultat trouve.",
+      summarySearchCache:
+        "Resultats charges depuis le cache local. Derniere mise a jour : {time}.",
+      summarySearchFallback:
+        "La recherche en direct n'est pas disponible. Affichage des resultats enregistres le {time}.",
+      summarySearchOffline: "La recherche en ligne n'est pas disponible pour le moment.",
+      summarySingleWordOnly: "Saisissez un seul mot a la fois.",
+      emptyTitle: "Aucune entree selectionnee",
+      emptyCopy:
+        "Lorsque vous choisissez un resultat, la definition et les autres informations apparaitront ici.",
+      entryContentTitle: "Contenu de l'entree",
+      primaryDefinitionLabel: "Definition principale",
+      speakStart: "Ecouter",
+      speakStop: "Arreter",
+      entryOnline: "",
+      resultOnline: '"{query}"',
+      resultGeneric: "Entree",
+      cacheShowing: "Affichage depuis le cache local. Derniere mise a jour : {time}.",
+      cacheLoading: "Aucune copie locale disponible. Chargement en ligne.",
+      cacheUpdated: "Entree mise a jour en ligne et enregistree dans le cache local.",
+      cacheFallback:
+        "Connexion indisponible. Affichage de la copie locale enregistree le {time}.",
+      cacheMissing: "Aucun cache local disponible pour cette entree.",
+      entryLoading: "Chargement de l'entree...",
+      translationLoading: "Traduction du contenu en cours...",
+      entryUnavailable: "Impossible de charger cette entree en ligne pour le moment.",
+      entryEmpty: "Aucun contenu disponible."
+    }
+  },
+  {
+    code: "es",
+    label: "Spagnolo",
+    strings: {
+      eyebrow: "Diccionario en linea",
+      title: "Un diccionario web simple y listo para crecer",
+      heroCopy:
+        "Busca una palabra y consulta en tiempo real el contenido del diccionario, sin introducir vocablos manualmente.",
+      heroLanguageLabel: "Selecciona el diccionario",
+      entryLanguageLabel: "Traducir a:",
+      searchLabel: "Buscar una palabra",
+      readingToolsTitle: "Lectura facilitada",
+      readingToolsCopy: "Activa solo lo que te ayude a leer mejor.",
+      readingLargeText: "Texto mas grande",
+      readingLineSpacing: "Mayor interlineado",
+      readingStrongContrast: "Contraste mas fuerte",
+      searchPlaceholder: "Por ejemplo: casa",
+      clearButton: "Limpiar",
+      summaryIdle: "Escribe una palabra para buscarla en linea.",
+      summarySearching: "Busqueda en linea en curso...",
+      summarySingle: "1 resultado encontrado.",
+      summaryMultiple: "{count} resultados encontrados.",
+      summaryNoResults: "No se encontraron resultados.",
+      summarySearchCache:
+        "Resultados cargados desde la cache local. Ultima actualizacion: {time}.",
+      summarySearchFallback:
+        "La busqueda en vivo no esta disponible. Mostrando resultados guardados el {time}.",
+      summarySearchOffline: "La busqueda en linea no esta disponible en este momento.",
+      summarySingleWordOnly: "Escribe una sola palabra cada vez.",
+      emptyTitle: "Ninguna entrada seleccionada",
+      emptyCopy:
+        "Cuando elijas un resultado, aqui apareceran la definicion y las demas informaciones de la palabra.",
+      entryContentTitle: "Contenido de la entrada",
+      primaryDefinitionLabel: "Definicion principal",
+      speakStart: "Escuchar",
+      speakStop: "Detener",
+      entryOnline: "",
+      resultOnline: '"{query}"',
+      resultGeneric: "Entrada",
+      cacheShowing: "Mostrando desde la cache local. Ultima actualizacion: {time}.",
+      cacheLoading: "No hay copia local disponible. Cargando en linea.",
+      cacheUpdated: "La entrada se actualizo en linea y se guardo en la cache local.",
+      cacheFallback:
+        "Conexion no disponible. Mostrando la copia local guardada el {time}.",
+      cacheMissing: "No hay cache local disponible para esta entrada.",
+      entryLoading: "Cargando entrada...",
+      translationLoading: "Traduciendo el contenido...",
+      entryUnavailable: "No pude cargar esta entrada en linea en este momento.",
+      entryEmpty: "No hay contenido disponible."
+    }
+  },
+];
