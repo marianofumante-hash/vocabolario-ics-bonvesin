@@ -51,9 +51,10 @@ const languageBadgeMap = {
   it: "IT",
   en: "EN",
   fr: "FR",
-  es: "ES"
+  es: "ES",
+  de: "DE"
 };
-const allowedLanguageCodes = ["it", "en", "fr", "es"];
+const allowedLanguageCodes = ["it", "en", "fr", "es", "de"];
 const availableLanguages = Array.isArray(window.UI_LANGUAGES)
   ? window.UI_LANGUAGES.filter((language) => allowedLanguageCodes.includes(language.code))
   : [];
