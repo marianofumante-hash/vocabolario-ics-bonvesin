@@ -156,9 +156,10 @@ body::before {
 }
 
 .language-options {
+  --language-option-gap: 10px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--language-option-gap);
 }
 
 .language-option {
@@ -287,8 +288,36 @@ body::before {
   );
 }
 
+.language-option[data-code="de"] .language-option-badge {
+  --language-flag: linear-gradient(
+    180deg,
+    #111111 0%,
+    #111111 33.333%,
+    #c1121f 33.333%,
+    #c1121f 66.666%,
+    #f2c230 66.666%,
+    #f2c230 100%
+  );
+  color: #ffffff;
+  text-shadow:
+    -1px 0 #111111,
+    1px 0 #111111,
+    0 -1px #111111,
+    0 1px #111111,
+    -1px -1px #111111,
+    1px -1px #111111,
+    -1px 1px #111111,
+    1px 1px #111111;
+}
+
 .language-option-text {
   line-height: 1.15;
+}
+
+.language-options > .language-option:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc((100% - var(--language-option-gap)) / 2);
 }
 
 .hero-language-picker .language-option {
@@ -1041,7 +1070,7 @@ body.pref-large-text .language-select,
 body.pref-large-text .ghost-button,
 body.pref-large-text .preference-button,
 body.pref-large-text .search-summary,
-body.pref-large-text .reading-tools-copy,
+body.pref-large-text .readingToolsCopy,
 body.pref-large-text .result-card span,
 body.pref-large-text .entry-cache-status,
 body.pref-large-text .entry-pronunciation,
