@@ -143,7 +143,7 @@ window.UI_LANGUAGES = [
       resultOnline: '"{query}"',
       resultGeneric: "Entree",
       cacheShowing: "Affichage depuis le cache local. Derniere mise a jour : {time}.",
-      cacheLoading: "Aucune copie locale disponible. Chargement en ligne.",
+      cacheLoading: "Aucune copie locale disponibile. Chargement en ligne.",
       cacheUpdated: "Entree mise a jour en ligne et enregistree dans le cache local.",
       cacheFallback:
         "Connexion indisponible. Affichage de la copie locale enregistree le {time}.",
@@ -194,7 +194,7 @@ window.UI_LANGUAGES = [
       resultOnline: '"{query}"',
       resultGeneric: "Entrada",
       cacheShowing: "Mostrando desde la cache local. Ultima actualizacion: {time}.",
-      cacheLoading: "No hay copia local disponible. Cargando en linea.",
+      cacheLoading: "No hay copia local disponibile. Cargando en linea.",
       cacheUpdated: "La entrada se actualizo en linea y se guardo en la cache local.",
       cacheFallback:
         "Conexion no disponible. Mostrando la copia local guardada el {time}.",
@@ -203,6 +203,57 @@ window.UI_LANGUAGES = [
       translationLoading: "Traduciendo el contenido...",
       entryUnavailable: "No pude cargar esta entrada en linea en este momento.",
       entryEmpty: "No hay contenido disponible."
+    }
+  },
+  {
+    code: "de",
+    label: "Tedesco",
+    strings: {
+      eyebrow: "Online-Worterbuch",
+      title: "Ein einfaches Web-Worterbuch, bereit zum Wachsen",
+      heroCopy:
+        "Suche ein Wort und rufe den Worterbuchinhalt in Echtzeit auf, ohne Begriffe manuell einzugeben.",
+      heroLanguageLabel: "Wahle das Worterbuch",
+      entryLanguageLabel: "Ubersetzen in:",
+      searchLabel: "Ein Wort suchen",
+      readingToolsTitle: "Lesehilfe",
+      readingToolsCopy: "Aktiviere nur das, was dir beim Lesen hilft.",
+      readingLargeText: "Grosserer Text",
+      readingLineSpacing: "Mehr Zeilenabstand",
+      readingStrongContrast: "Starkerer Kontrast",
+      searchPlaceholder: "Zum Beispiel: casa",
+      clearButton: "Loschen",
+      summaryIdle: "Gib ein Wort ein, um online zu suchen.",
+      summarySearching: "Online-Suche lauft...",
+      summarySingle: "1 Ergebnis gefunden.",
+      summaryMultiple: "{count} Ergebnisse gefunden.",
+      summaryNoResults: "Keine Ergebnisse gefunden.",
+      summarySearchCache:
+        "Ergebnisse aus dem lokalen Cache geladen. Letzte Aktualisierung: {time}.",
+      summarySearchFallback:
+        "Die Live-Suche ist nicht verfugbar. Es werden die am {time} gespeicherten Ergebnisse angezeigt.",
+      summarySearchOffline: "Die Online-Suche ist im Moment nicht verfugbar.",
+      summarySingleWordOnly: "Gib immer nur ein Wort ein.",
+      emptyTitle: "Kein Eintrag ausgewahlt",
+      emptyCopy:
+        "Wenn du ein Ergebnis auswahlst, erscheinen hier die Definition und weitere Informationen zum Wort.",
+      entryContentTitle: "Inhalt des Eintrags",
+      primaryDefinitionLabel: "Hauptdefinition",
+      speakStart: "Anhoren",
+      speakStop: "Stopp",
+      entryOnline: "",
+      resultOnline: '"{query}"',
+      resultGeneric: "Eintrag",
+      cacheShowing: "Anzeige aus lokalem Cache. Letzte Aktualisierung: {time}.",
+      cacheLoading: "Keine lokale Kopie verfugbar. Online-Laden lauft.",
+      cacheUpdated: "Eintrag online aktualisiert und im lokalen Cache gespeichert.",
+      cacheFallback:
+        "Verbindung nicht verfugbar. Die am {time} gespeicherte lokale Kopie wird angezeigt.",
+      cacheMissing: "Kein lokaler Cache fur diesen Eintrag verfugbar.",
+      entryLoading: "Eintrag wird geladen...",
+      translationLoading: "Inhalt wird ubersetzt...",
+      entryUnavailable: "Ich konnte diesen Eintrag im Moment nicht online laden.",
+      entryEmpty: "Kein Inhalt verfugbar."
     }
   },
 ];
