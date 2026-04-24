@@ -143,7 +143,7 @@ window.UI_LANGUAGES = [
       resultOnline: '"{query}"',
       resultGeneric: "Entree",
       cacheShowing: "Affichage depuis le cache local. Derniere mise a jour : {time}.",
-      cacheLoading: "Aucune copie locale disponibile. Chargement en ligne.",
+      cacheLoading: "Aucune copie locale disponible. Chargement en ligne.",
       cacheUpdated: "Entree mise a jour en ligne et enregistree dans le cache local.",
       cacheFallback:
         "Connexion indisponible. Affichage de la copie locale enregistree le {time}.",
@@ -151,7 +151,7 @@ window.UI_LANGUAGES = [
       entryLoading: "Chargement de l'entree...",
       translationLoading: "Traduction du contenu en cours...",
       entryUnavailable: "Impossible de charger cette entree en ligne pour le moment.",
-      entryEmpty: "Aucun contenu disponible."
+      entryEmpty: "Aucun contenu disponibile."
     }
   },
   {
@@ -194,7 +194,7 @@ window.UI_LANGUAGES = [
       resultOnline: '"{query}"',
       resultGeneric: "Entrada",
       cacheShowing: "Mostrando desde la cache local. Ultima actualizacion: {time}.",
-      cacheLoading: "No hay copia local disponibile. Cargando en linea.",
+      cacheLoading: "No hay copia local disponible. Cargando en linea.",
       cacheUpdated: "La entrada se actualizo en linea y se guardo en la cache local.",
       cacheFallback:
         "Conexion no disponible. Mostrando la copia local guardada el {time}.",
@@ -245,11 +245,11 @@ window.UI_LANGUAGES = [
       resultOnline: '"{query}"',
       resultGeneric: "Eintrag",
       cacheShowing: "Anzeige aus lokalem Cache. Letzte Aktualisierung: {time}.",
-      cacheLoading: "Keine lokale Kopie verfugbar. Online-Laden lauft.",
+      cacheLoading: "Keine locale Kopie verfugbar. Online-Laden lauft.",
       cacheUpdated: "Eintrag online aktualisiert und im lokalen Cache gespeichert.",
       cacheFallback:
-        "Verbindung nicht verfugbar. Die am {time} gespeicherte lokale Kopie wird angezeigt.",
-      cacheMissing: "Kein lokaler Cache fur diesen Eintrag verfugbar.",
+        "Verbindung nicht verfugbar. Die am {time} gespeicherte locale Kopie wird angezeigt.",
+      cacheMissing: "Kein localer Cache fur diesen Eintrag verfugbar.",
       entryLoading: "Eintrag wird geladen...",
       translationLoading: "Inhalt wird ubersetzt...",
       entryUnavailable: "Ich konnte diesen Eintrag im Moment nicht online laden.",
