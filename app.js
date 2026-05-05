@@ -1,11 +1,24 @@
-const API_ENDPOINT = "https://it.wiktionary.org/w/api.php";
-const SOURCE_BASE_URL = "https://it.wiktionary.org/wiki/";
+const WIKTIONARY_API_ENDPOINTS = {
+  it: "https://it.wiktionary.org/w/api.php",
+  en: "https://en.wiktionary.org/w/api.php",
+  fr: "https://fr.wiktionary.org/w/api.php",
+  es: "https://es.wiktionary.org/w/api.php",
+  de: "https://de.wiktionary.org/w/api.php"
+};
+const WIKTIONARY_PAGE_BASE_URLS = {
+  it: "https://it.wiktionary.org/wiki/",
+  en: "https://en.wiktionary.org/wiki/",
+  fr: "https://fr.wiktionary.org/wiki/",
+  es: "https://es.wiktionary.org/wiki/",
+  de: "https://de.wiktionary.org/wiki/"
+};
 const GOOGLE_TRANSLATE_ENDPOINT = "https://translate.googleapis.com/translate_a/single";
 const DEFAULT_UI_LANGUAGE = "it";
+const MAX_SEARCH_RESULTS = 5;
 const UI_LANGUAGE_STORAGE_KEY = "vocabolario.uiLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
-const SEARCH_CACHE_KEY = "vocabolario.searchCache.v1";
+const SEARCH_CACHE_KEY = "vocabolario.searchCache.v2";
 const ENTRY_CACHE_KEY = "vocabolario.entryCache.v2";
 const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v2";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
@@ -155,8 +168,19 @@ function t(key, params = {}) {
   return template;
 }
 
-function buildApiUrl(params) {
-  const url = new URL(API_ENDPOINT);
+function getWiktionaryApiEndpoint(languageCode = DEFAULT_UI_LANGUAGE) {
+  return WIKTIONARY_API_ENDPOINTS[languageCode] || WIKTIONARY_API_ENDPOINTS[DEFAULT_UI_LANGUAGE];
+}
+
+function getWiktionaryPageBaseUrl(languageCode = DEFAULT_UI_LANGUAGE) {
+  return (
+    WIKTIONARY_PAGE_BASE_URLS[languageCode] ||
+    WIKTIONARY_PAGE_BASE_URLS[DEFAULT_UI_LANGUAGE]
+  );
+}
+
+function buildApiUrl(languageCode, params) {
+  const url = new URL(getWiktionaryApiEndpoint(languageCode));
   url.search = new URLSearchParams({
     origin: "*",
     format: "json",
@@ -665,22 +689,49 @@ function cleanParsedHtml(rawHtml) {
   return wrapper.innerHTML || `<p class="loading-note">${t("entryEmpty")}</p>`;
 }
 
-async function searchEntries(query) {
-  const url = buildApiUrl({
+function getSearchCacheId(query, languageCode) {
+  return `${languageCode}::${normalizeText(query)}`;
+}
+
+async function searchEntries(query, languageCode = DEFAULT_UI_LANGUAGE) {
+  const url = buildApiUrl(languageCode, {
     action: "opensearch",
     search: query,
-    limit: "10",
+    limit: String(MAX_SEARCH_RESULTS),
     namespace: "0"
   });
 
   const data = await fetchJson(url);
   const titles = Array.isArray(data[1]) ? data[1] : [];
   const urls = Array.isArray(data[3]) ? data[3] : [];
-
-  return titles.map((title, index) => ({
+  const results = titles.map((title, index) => ({
     title,
-    url: urls[index] || `${SOURCE_BASE_URL}${encodeURIComponent(title)}`
+    lookupTitle: title,
+    url: urls[index] || `${getWiktionaryPageBaseUrl(languageCode)}${encodeURIComponent(title)}`
   }));
+
+  if (languageCode === DEFAULT_UI_LANGUAGE) {
+    return results;
+  }
+
+  return Promise.all(
+    results.map(async (entry) => {
+      try {
+        const lookupTitle = await translateText(
+          entry.title,
+          languageCode,
+          DEFAULT_UI_LANGUAGE
+        );
+
+        return {
+          ...entry,
+          lookupTitle: lookupTitle || entry.title
+        };
+      } catch (error) {
+        return entry;
+      }
+    })
+  );
 }
 
 async function translateText(text, sourceLanguageCode, targetLanguageCode) {
@@ -855,7 +906,7 @@ function startSpeech() {
 }
 
 async function fetchEntry(title) {
-  const parseUrl = buildApiUrl({
+  const parseUrl = buildApiUrl(DEFAULT_UI_LANGUAGE, {
     action: "parse",
     page: title,
     prop: "text|displaytitle"
@@ -869,8 +920,11 @@ async function fetchEntry(title) {
 
   const cleanedHtml = cleanParsedHtml(parsed.text["*"]);
 
+  const sourceTitle = parsed.displaytitle ? parserSafeText(parsed.displaytitle) : title;
+
   return {
-    title: parsed.displaytitle ? parserSafeText(parsed.displaytitle) : title,
+    title: sourceTitle,
+    sourceTitle,
     html: cleanedHtml,
     renderedHtml: cleanedHtml
   };
@@ -936,7 +990,7 @@ async function updateEntryTranslation() {
   }
 
   const translationCacheId = getTranslationCacheId(
-    currentEntryData.title,
+    currentEntryData.sourceTitle || currentEntryData.lookupTitle || currentEntryData.title,
     currentLanguageCode,
     currentEntryData.html
   );
@@ -981,18 +1035,31 @@ async function updateEntryTranslation() {
   }
 }
 
-async function loadEntry(title) {
-  activeEntryTitle = title;
+async function loadEntry(result) {
+  const displayTitle =
+    typeof result === "string" ? result : result?.title || "";
+  const lookupTitle =
+    typeof result === "string" ? result : result?.lookupTitle || result?.title || "";
+
+  if (!displayTitle || !lookupTitle) {
+    return;
+  }
+
+  activeEntryTitle = displayTitle;
   showEntryState();
 
   const cachedEntry = getCachedValue(
     ENTRY_CACHE_KEY,
-    normalizeText(title),
+    normalizeText(lookupTitle),
     ENTRY_CACHE_TTL_MS
   );
 
   if (cachedEntry) {
-    currentEntryData = { ...cachedEntry.data };
+    currentEntryData = {
+      ...cachedEntry.data,
+      title: displayTitle,
+      lookupTitle
+    };
     renderEntry(currentEntryData);
     setEntryCacheStatusByKey("cacheShowing", {
       time: formatSavedAt(cachedEntry.savedAt)
@@ -1001,7 +1068,7 @@ async function loadEntry(title) {
   } else {
     currentEntryData = null;
     entryPos.textContent = "";
-    entryLemma.textContent = title;
+    entryLemma.textContent = displayTitle;
     entryPronunciation.textContent = "";
     entryContent.innerHTML = `<p class="loading-note">${t("entryLoading")}</p>`;
     setEntryCacheStatusByKey("cacheLoading");
@@ -1010,18 +1077,22 @@ async function loadEntry(title) {
   renderResults(currentResults);
 
   try {
-    const entry = await fetchEntry(title);
+    const entry = await fetchEntry(lookupTitle);
 
-    if (activeEntryTitle !== title) {
+    if (activeEntryTitle !== displayTitle) {
       return;
     }
 
-    currentEntryData = { ...entry };
-    setCachedValue(ENTRY_CACHE_KEY, normalizeText(title), entry);
+    currentEntryData = {
+      ...entry,
+      title: displayTitle,
+      lookupTitle
+    };
+    setCachedValue(ENTRY_CACHE_KEY, normalizeText(lookupTitle), entry);
     setEntryCacheStatusByKey("cacheUpdated");
     await updateEntryTranslation();
   } catch (error) {
-    if (activeEntryTitle !== title) {
+    if (activeEntryTitle !== displayTitle) {
       return;
     }
 
@@ -1066,13 +1137,13 @@ function renderResults(results) {
 
     button.appendChild(title);
     button.appendChild(subtitle);
-    button.addEventListener("click", () => loadEntry(entry.title));
+    button.addEventListener("click", () => loadEntry(entry));
     resultsContainer.appendChild(button);
   });
 }
 
 async function handleSearch(query) {
-  let effectiveQuery = query.trim();
+  const effectiveQuery = query.trim();
 
   if (!effectiveQuery) {
     const normalizedQuery = normalizeText(query);
@@ -1085,18 +1156,6 @@ async function handleSearch(query) {
       activeEntryTitle = null;
       showEmptyState();
       return;
-    }
-  }
-
-  if (currentLanguageCode !== DEFAULT_UI_LANGUAGE) {
-    try {
-      effectiveQuery = await translateText(
-        effectiveQuery,
-        currentLanguageCode,
-        "it"
-      );
-    } catch (error) {
-      // Fall back to original query.
     }
   }
 
@@ -1113,9 +1172,10 @@ async function handleSearch(query) {
   }
 
   const requestId = ++latestSearchRequestId;
+  const searchCacheId = getSearchCacheId(effectiveQuery, currentLanguageCode);
   const cachedSearch = getCachedValue(
     SEARCH_CACHE_KEY,
-    normalizedQuery,
+    searchCacheId,
     SEARCH_CACHE_TTL_MS
   );
 
@@ -1130,14 +1190,14 @@ async function handleSearch(query) {
   }
 
   try {
-    const results = await searchEntries(effectiveQuery);
+    const results = await searchEntries(effectiveQuery, currentLanguageCode);
 
     if (requestId !== latestSearchRequestId) {
       return;
     }
 
     currentResults = results;
-    setCachedValue(SEARCH_CACHE_KEY, normalizedQuery, results);
+    setCachedValue(SEARCH_CACHE_KEY, searchCacheId, results);
 
     if (!results.length) {
       setSummaryByKey("summaryNoResults");
