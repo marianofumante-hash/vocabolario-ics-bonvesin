@@ -841,6 +841,8 @@ body::before {
 .entry-pos {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0 0 12px;
   padding: 6px 12px;
   border-radius: 999px;
@@ -848,8 +850,16 @@ body::before {
   color: var(--accent-strong);
   font-size: 0.84rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.entry-pos-label {
+  opacity: 0.78;
+}
+
+.entry-pos-value {
+  font-weight: 800;
 }
 
 .entry-lemma {
@@ -857,6 +867,14 @@ body::before {
   color: #0f2444;
   font-size: clamp(2.4rem, 4.5vw, 4.2rem);
   line-height: 0.95;
+}
+
+.entry-translation-summary {
+  margin: 12px 0 0;
+  color: #24456f;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .entry-cache-status {

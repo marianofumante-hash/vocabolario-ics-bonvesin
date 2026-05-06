@@ -22,6 +22,7 @@ window.UI_LANGUAGES = [
       summarySingle: "1 risultato trovato.",
       summaryMultiple: "{count} risultati trovati.",
       summaryNoResults: "Nessun risultato trovato.",
+      summaryQueryBlocked: "Questa ricerca non e' disponibile in questa versione scolastica.",
       summarySearchCache:
         "Risultati caricati dalla cache locale. Ultimo aggiornamento: {time}.",
       summarySearchFallback:
@@ -32,6 +33,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Quando scegli un risultato, qui compariranno la definizione e le altre informazioni della parola.",
       entryContentTitle: "Contenuto della voce",
+      entryItalianTranslationLabel: "Traduzione in italiano:",
       primaryDefinitionLabel: "Definizione principale",
       speakStart: "Ascolta",
       speakStop: "Stop",
@@ -76,6 +78,7 @@ window.UI_LANGUAGES = [
       summarySingle: "1 result found.",
       summaryMultiple: "{count} results found.",
       summaryNoResults: "No results found.",
+      summaryQueryBlocked: "This search is not available in this school version.",
       summarySearchCache: "Results loaded from local cache. Last update: {time}.",
       summarySearchFallback:
         "Live search is unavailable. Showing results saved on {time}.",
@@ -85,6 +88,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "When you choose a result, the definition and other information about the word will appear here.",
       entryContentTitle: "Entry content",
+      entryItalianTranslationLabel: "Italian translation:",
       primaryDefinitionLabel: "Main definition",
       speakStart: "Listen",
       speakStop: "Stop",
@@ -126,6 +130,7 @@ window.UI_LANGUAGES = [
       summarySingle: "1 resultat trouve.",
       summaryMultiple: "{count} resultats trouves.",
       summaryNoResults: "Aucun resultat trouve.",
+      summaryQueryBlocked: "Cette recherche n'est pas disponible dans cette version scolaire.",
       summarySearchCache:
         "Resultats charges depuis le cache local. Derniere mise a jour : {time}.",
       summarySearchFallback:
@@ -136,6 +141,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Lorsque vous choisissez un resultat, la definition et les autres informations apparaitront ici.",
       entryContentTitle: "Contenu de l'entree",
+      entryItalianTranslationLabel: "Traduction italienne :",
       primaryDefinitionLabel: "Definition principale",
       speakStart: "Ecouter",
       speakStop: "Arreter",
@@ -177,6 +183,7 @@ window.UI_LANGUAGES = [
       summarySingle: "1 resultado encontrado.",
       summaryMultiple: "{count} resultados encontrados.",
       summaryNoResults: "No se encontraron resultados.",
+      summaryQueryBlocked: "Esta busqueda no esta disponible en esta version escolar.",
       summarySearchCache:
         "Resultados cargados desde la cache local. Ultima actualizacion: {time}.",
       summarySearchFallback:
@@ -187,6 +194,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Cuando elijas un resultado, aqui apareceran la definicion y las demas informaciones de la palabra.",
       entryContentTitle: "Contenido de la entrada",
+      entryItalianTranslationLabel: "Traduccion al italiano:",
       primaryDefinitionLabel: "Definicion principal",
       speakStart: "Escuchar",
       speakStop: "Detener",
@@ -228,6 +236,7 @@ window.UI_LANGUAGES = [
       summarySingle: "1 Ergebnis gefunden.",
       summaryMultiple: "{count} Ergebnisse gefunden.",
       summaryNoResults: "Keine Ergebnisse gefunden.",
+      summaryQueryBlocked: "Diese Suche ist in dieser Schulversion nicht verfugbar.",
       summarySearchCache:
         "Ergebnisse aus dem lokalen Cache geladen. Letzte Aktualisierung: {time}.",
       summarySearchFallback:
@@ -238,6 +247,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Wenn du ein Ergebnis auswahlst, erscheinen hier die Definition und weitere Informationen zum Wort.",
       entryContentTitle: "Inhalt des Eintrags",
+      entryItalianTranslationLabel: "Italienische Ubersetzung:",
       primaryDefinitionLabel: "Hauptdefinition",
       speakStart: "Anhoren",
       speakStop: "Stopp",
