@@ -60,7 +60,7 @@ window.UI_LANGUAGES = [
     label: "Inglese",
     strings: {
       eyebrow: "Online Dictionary",
-      title: "A simple web dictionary, ready to grow",
+      title: "Vocabolario on line ICS Bonvesin de la Riva",
       heroCopy:
         "Search for a word and consult the dictionary content in real time, without entering vocabulary manually.",
       heroLanguageLabel: "Select the dictionary",
@@ -112,7 +112,7 @@ window.UI_LANGUAGES = [
     label: "Francese",
     strings: {
       eyebrow: "Dictionnaire en ligne",
-      title: "Un dictionnaire web simple, pret a evoluer",
+      title: "Vocabolario on line ICS Bonvesin de la Riva",
       heroCopy:
         "Recherchez un mot et consultez en temps reel le contenu du dictionnaire, sans saisir les mots a la main.",
       heroLanguageLabel: "Selectionnez le dictionnaire",
@@ -165,7 +165,7 @@ window.UI_LANGUAGES = [
     label: "Spagnolo",
     strings: {
       eyebrow: "Diccionario en linea",
-      title: "Un diccionario web simple y listo para crecer",
+      title: "Vocabolario on line ICS Bonvesin de la Riva",
       heroCopy:
         "Busca una palabra y consulta en tiempo real el contenido del diccionario, sin introducir vocablos manualmente.",
       heroLanguageLabel: "Selecciona el diccionario",
@@ -218,7 +218,7 @@ window.UI_LANGUAGES = [
     label: "Tedesco",
     strings: {
       eyebrow: "Online-Worterbuch",
-      title: "Ein einfaches Web-Worterbuch, bereit zum Wachsen",
+      title: "Vocabolario on line ICS Bonvesin de la Riva",
       heroCopy:
         "Suche ein Wort und rufe den Worterbuchinhalt in Echtzeit auf, ohne Begriffe manuell einzugeben.",
       heroLanguageLabel: "Wahle das Worterbuch",
