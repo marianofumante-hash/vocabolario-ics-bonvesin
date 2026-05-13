@@ -870,17 +870,50 @@ body::before {
 }
 
 .entry-translation-summary {
-  margin: 12px 0 0;
-  color: #24456f;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.45;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  width: min(100%, 720px);
+  margin: 18px 0 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(47, 94, 168, 0.2);
+  border-left: 7px solid var(--accent);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #edf4ff 100%);
+  color: #102647;
+  line-height: 1.3;
+  box-shadow: 0 12px 24px rgba(18, 41, 75, 0.08);
 }
 
-.entry-cache-status {
+.entry-translation-label {
+  color: var(--accent-strong);
+  font-size: clamp(1rem, 1.25vw, 1.16rem);
+  font-weight: 800;
+}
+
+.entry-translation-value {
+  color: #0f2444;
+  font-size: clamp(1.55rem, 2.4vw, 2.3rem);
+  font-weight: 800;
+}
+
+.entry-definition-summary {
+  width: min(100%, 760px);
   margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
+  padding: 18px 20px;
+  border: 1px solid rgba(47, 94, 168, 0.18);
+  border-radius: 18px;
+  background: #ffffff;
+  color: #172d50;
+  font-size: clamp(1.12rem, 1.55vw, 1.42rem);
+  font-weight: 700;
+  line-height: 1.58;
+  box-shadow: 0 12px 24px rgba(18, 41, 75, 0.07);
+}
+
+.entry-definition-summary:empty {
+  display: none;
 }
 
 .entry-pronunciation {
@@ -890,7 +923,7 @@ body::before {
 }
 
 .entry-section {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 .entry-section-header {
@@ -924,8 +957,8 @@ body::before {
 }
 
 .entry-content {
-  min-height: 280px;
-  padding: 24px 26px;
+  min-height: 220px;
+  padding: 22px 24px;
   border: 1px solid var(--line);
   border-radius: 24px;
   background: linear-gradient(180deg, #fbfdff 0%, #f5f9fe 100%);
@@ -943,7 +976,7 @@ body::before {
 }
 
 .entry-content .entry-section-heading {
-  display: inline-flex;
+  display: none;
   align-items: center;
   padding: 8px 14px;
   border-left: 4px solid var(--accent);
@@ -1090,7 +1123,6 @@ body.pref-large-text .preference-button,
 body.pref-large-text .search-summary,
 body.pref-large-text .reading-tools-copy,
 body.pref-large-text .result-card span,
-body.pref-large-text .entry-cache-status,
 body.pref-large-text .entry-pronunciation,
 body.pref-large-text .entry-content {
   font-size: 1.08rem;
@@ -1104,6 +1136,10 @@ body.pref-large-text .entry-lemma {
   font-size: clamp(2.7rem, 5vw, 4.5rem);
 }
 
+body.pref-large-text .entry-definition-summary {
+  font-size: clamp(1.22rem, 1.7vw, 1.54rem);
+}
+
 body.pref-large-text .entry-content .entry-primary-block {
   font-size: 1.18em;
 }
@@ -1115,7 +1151,7 @@ body.pref-large-text .entry-content .entry-primary-kicker {
 body.pref-line-spacious .hero-copy,
 body.pref-line-spacious .search-summary,
 body.pref-line-spacious .result-card,
-body.pref-line-spacious .entry-cache-status,
+body.pref-line-spacious .entry-definition-summary,
 body.pref-line-spacious .entry-content,
 body.pref-line-spacious .entry-content .entry-primary-block {
   line-height: 2;

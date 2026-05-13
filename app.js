@@ -284,7 +284,7 @@ const prefStrongContrastButton = document.querySelector("#pref-strong-contrast")
 const entryLemma = document.querySelector("#entry-lemma");
 const entryPos = document.querySelector("#entry-pos");
 const entryTranslationSummary = document.querySelector("#entry-translation-summary");
-const entryCacheStatus = document.querySelector("#entry-cache-status");
+const entryDefinitionSummary = document.querySelector("#entry-definition-summary");
 const entryPronunciation = document.querySelector("#entry-pronunciation");
 const entryContent = document.querySelector("#entry-content");
 
@@ -334,7 +334,6 @@ let latestSearchRequestId = 0;
 let currentResults = [];
 let currentEntryData = null;
 let lastSummaryState = { key: "summaryIdle", params: {}, isError: false };
-let lastCacheStatusState = { key: "", params: {} };
 let translationRequestId = 0;
 let currentUtterance = null;
 let availableVoices = [];
@@ -677,26 +676,10 @@ function setCachedValue(cacheKey, itemKey, data) {
   writeCache(cacheKey, cache);
 }
 
-function formatSavedAt(savedAt) {
-  try {
-    return new Intl.DateTimeFormat(currentLanguageCode === "it" ? "it-IT" : undefined, {
-      dateStyle: "short",
-      timeStyle: "short"
-    }).format(new Date(savedAt));
-  } catch (error) {
-    return "";
-  }
-}
-
 function setSummaryByKey(key, params = {}, isError = false) {
   lastSummaryState = { key, params, isError };
   searchSummary.textContent = t(key, params);
   searchSummary.classList.toggle("is-error", isError);
-}
-
-function setEntryCacheStatusByKey(key, params = {}) {
-  lastCacheStatusState = { key, params };
-  entryCacheStatus.textContent = key ? t(key, params) : "";
 }
 
 function persistReadingPreferences() {
@@ -810,7 +793,6 @@ function applyUiLanguage() {
   applyReadingPreferences();
 
   setSummaryByKey(lastSummaryState.key, lastSummaryState.params, lastSummaryState.isError);
-  setEntryCacheStatusByKey(lastCacheStatusState.key, lastCacheStatusState.params);
   renderResults(currentResults);
 
   if (currentEntryData) {
@@ -833,8 +815,8 @@ function resetSearchInterface({ keepFocus = false } = {}) {
   resultsContainer.innerHTML = "";
   activeEntryTitle = null;
   entryTranslationSummary.textContent = "";
+  entryDefinitionSummary.textContent = "";
   setSummaryByKey("summaryIdle");
-  setEntryCacheStatusByKey("");
   showEmptyState();
 
   if (keepFocus) {
@@ -912,7 +894,6 @@ function initializeLanguageSelector() {
     if (searchInput.value.trim()) {
       currentEntryData = null;
       activeEntryTitle = null;
-      setEntryCacheStatusByKey("");
       showEmptyState();
       handleSearch(searchInput.value);
     } else {
@@ -1699,6 +1680,24 @@ async function translateText(text, sourceLanguageCode, targetLanguageCode) {
   return data[0].map((part) => part[0] || "").join("").trim();
 }
 
+function renderEntryTranslationSummary(label, value) {
+  entryTranslationSummary.replaceChildren();
+
+  if (!value) {
+    return;
+  }
+
+  const labelElement = document.createElement("span");
+  labelElement.className = "entry-translation-label";
+  labelElement.textContent = label;
+
+  const valueElement = document.createElement("strong");
+  valueElement.className = "entry-translation-value";
+  valueElement.textContent = value;
+
+  entryTranslationSummary.append(labelElement, valueElement);
+}
+
 function renderEntry(entry) {
   const posLabel = normalizeSpaces(entry?.posLabel || "");
   entryPos.textContent = posLabel.includes("·") ? "" : posLabel;
@@ -1708,9 +1707,8 @@ function renderEntry(entry) {
   const translationLabel = targetTranslation
     ? t("entryLemmaTranslationLabel")
     : t("entryItalianTranslationLabel");
-  entryTranslationSummary.textContent = visibleTranslation
-    ? `${translationLabel} ${visibleTranslation}`
-    : "";
+  renderEntryTranslationSummary(translationLabel, visibleTranslation);
+  entryDefinitionSummary.textContent = cleanDefinitionText(entry?.firstDefinition || "");
   entryLemma.textContent = entry.title;
   entryPronunciation.textContent = "";
   entryContent.innerHTML = entry.html;
@@ -2196,18 +2194,15 @@ async function loadEntry(result) {
         renderEntry(entry);
       }
     });
-    setEntryCacheStatusByKey("cacheShowing", {
-      time: formatSavedAt(cachedEntry.savedAt)
-    });
     updateEntryTranslation();
   } else {
     currentEntryData = null;
     entryPos.textContent = "";
     entryTranslationSummary.textContent = "";
+    entryDefinitionSummary.textContent = "";
     entryLemma.textContent = displayTitle;
     entryPronunciation.textContent = "";
     entryContent.innerHTML = `<p class="loading-note">${t("entryLoading")}</p>`;
-    setEntryCacheStatusByKey("cacheLoading");
   }
 
   renderResults(currentResults);
@@ -2231,7 +2226,6 @@ async function loadEntry(result) {
       getEntryCacheId(lookupTitle, sourceLanguageCode),
       currentEntryData
     );
-    setEntryCacheStatusByKey("cacheUpdated");
     await updateEntryTranslation();
   } catch (error) {
     if (activeEntryTitle !== displayTitle) {
@@ -2241,11 +2235,6 @@ async function loadEntry(result) {
     if (!cachedEntry) {
       currentEntryData = null;
       entryContent.innerHTML = `<p class="loading-note">${t("entryUnavailable")}</p>`;
-      setEntryCacheStatusByKey("cacheMissing");
-    } else {
-      setEntryCacheStatusByKey("cacheFallback", {
-        time: formatSavedAt(cachedEntry.savedAt)
-      });
     }
   }
 }
@@ -2347,9 +2336,10 @@ async function handleSearch(query) {
   if (cachedResults.length) {
     currentResults = cachedResults;
     renderResults(currentResults);
-    setSummaryByKey("summarySearchCache", {
-      time: formatSavedAt(cachedSearch.savedAt)
-    });
+    setSummaryByKey(
+      cachedResults.length === 1 ? "summarySingle" : "summaryMultiple",
+      { count: String(cachedResults.length) }
+    );
   } else {
     setSummaryByKey("summarySearching");
   }
@@ -2392,9 +2382,8 @@ async function handleSearch(query) {
     currentResults = cachedResults;
     renderResults(currentResults);
     setSummaryByKey(
-      "summarySearchFallback",
-      { time: formatSavedAt(cachedSearch.savedAt) },
-      true
+      cachedResults.length === 1 ? "summarySingle" : "summaryMultiple",
+      { count: String(cachedResults.length) }
     );
   }
 }

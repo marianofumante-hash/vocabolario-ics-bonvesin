@@ -19,7 +19,7 @@ Il progetto e' un vocabolario online locale che:
 
 - cerca vocaboli online
 - mostra il contenuto della voce nella pagina
-- traduce interfaccia e contenuto della voce quando si cambia lingua
+- traduce interfaccia e lemma della voce quando si cambia lingua
 - mantiene una cache locale nel browser
 - legge il contenuto con sintesi vocale tramite browser
 
@@ -29,6 +29,7 @@ Il progetto e' un vocabolario online locale che:
 - ricerca limitata al lemma esatto tramite verifica diretta della pagina
 - traduzione della query verso l'italiano quando la lingua selezionata non e' italiano
 - traduzione del lemma nella lingua selezionata, senza tradurre il contenuto della voce
+- traduzione e prima spiegazione sono evidenziate subito nella testata della voce
 - cache locale per risultati, voci e traduzioni
 - due selettori lingua sincronizzati
 - pulsanti audio `Ascolta` e `Stop`
@@ -69,6 +70,7 @@ La traduzione attuale:
 - traduce l'interfaccia tramite `ui-languages.js`
 - traduce solo il lemma della voce via chiamate web nel browser
 - mantiene il contenuto della voce nella lingua del vocabolario sorgente
+- non mostra messaggi tecnici di cache nella pagina per studenti e insegnanti
 
 Nota pratica:
 

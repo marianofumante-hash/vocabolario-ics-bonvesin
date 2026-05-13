@@ -23,16 +23,12 @@ window.UI_LANGUAGES = [
       summaryMultiple: "{count} risultati trovati.",
       summaryNoResults: "Nessun risultato trovato.",
       summaryQueryBlocked: "Questa ricerca non e' disponibile in questa versione scolastica.",
-      summarySearchCache:
-        "Risultati caricati dalla cache locale. Ultimo aggiornamento: {time}.",
-      summarySearchFallback:
-        "Ricerca live non disponibile. Sto mostrando i risultati salvati il {time}.",
       summarySearchOffline: "La ricerca online non e' disponibile in questo momento.",
       summarySingleWordOnly: "Inserisci una sola parola alla volta.",
       emptyTitle: "Nessuna voce selezionata",
       emptyCopy:
         "Quando scegli un risultato, qui compariranno la definizione e le altre informazioni della parola.",
-      entryContentTitle: "Contenuto della voce",
+      entryContentTitle: "Spiegazione",
       entryLemmaTranslationLabel: "Traduzione:",
       entryItalianTranslationLabel: "Traduzione in italiano:",
       primaryDefinitionLabel: "Definizione principale",
@@ -41,14 +37,6 @@ window.UI_LANGUAGES = [
       entryOnline: "",
       resultOnline: '"{query}"',
       resultGeneric: "Voce",
-      cacheShowing:
-        "Visualizzazione da cache locale. Ultimo aggiornamento: {time}.",
-      cacheLoading:
-        "Nessuna copia locale disponibile. Caricamento online in corso.",
-      cacheUpdated: "Voce aggiornata online e salvata nella cache locale.",
-      cacheFallback:
-        "Connessione non disponibile. Sto mostrando la copia locale salvata il {time}.",
-      cacheMissing: "Nessuna cache locale disponibile per questa voce.",
       entryLoading: "Caricamento della voce in corso...",
       translationLoading: "Traduzione del lemma in corso...",
       entryUnavailable:
@@ -80,15 +68,12 @@ window.UI_LANGUAGES = [
       summaryMultiple: "{count} results found.",
       summaryNoResults: "No results found.",
       summaryQueryBlocked: "This search is not available in this school version.",
-      summarySearchCache: "Results loaded from local cache. Last update: {time}.",
-      summarySearchFallback:
-        "Live search is unavailable. Showing results saved on {time}.",
       summarySearchOffline: "Online search is not available right now.",
       summarySingleWordOnly: "Enter one word at a time.",
       emptyTitle: "No entry selected",
       emptyCopy:
         "When you choose a result, the definition and other information about the word will appear here.",
-      entryContentTitle: "Entry content",
+      entryContentTitle: "Meaning",
       entryLemmaTranslationLabel: "Translation:",
       entryItalianTranslationLabel: "Italian translation:",
       primaryDefinitionLabel: "Main definition",
@@ -97,12 +82,6 @@ window.UI_LANGUAGES = [
       entryOnline: "",
       resultOnline: '"{query}"',
       resultGeneric: "Entry",
-      cacheShowing: "Showing local cache. Last update: {time}.",
-      cacheLoading: "No local copy available. Loading online.",
-      cacheUpdated: "Entry updated online and saved to local cache.",
-      cacheFallback:
-        "Connection unavailable. Showing the local copy saved on {time}.",
-      cacheMissing: "No local cache available for this entry.",
       entryLoading: "Loading entry...",
       translationLoading: "Translating lemma...",
       entryUnavailable: "I could not load this entry online right now.",
@@ -133,16 +112,12 @@ window.UI_LANGUAGES = [
       summaryMultiple: "{count} resultats trouves.",
       summaryNoResults: "Aucun resultat trouve.",
       summaryQueryBlocked: "Cette recherche n'est pas disponible dans cette version scolaire.",
-      summarySearchCache:
-        "Resultats charges depuis le cache local. Derniere mise a jour : {time}.",
-      summarySearchFallback:
-        "La recherche en direct n'est pas disponible. Affichage des resultats enregistres le {time}.",
       summarySearchOffline: "La recherche en ligne n'est pas disponible pour le moment.",
       summarySingleWordOnly: "Saisissez un seul mot a la fois.",
       emptyTitle: "Aucune entree selectionnee",
       emptyCopy:
         "Lorsque vous choisissez un resultat, la definition et les autres informations apparaitront ici.",
-      entryContentTitle: "Contenu de l'entree",
+      entryContentTitle: "Explication",
       entryLemmaTranslationLabel: "Traduction :",
       entryItalianTranslationLabel: "Traduction italienne :",
       primaryDefinitionLabel: "Definition principale",
@@ -151,12 +126,6 @@ window.UI_LANGUAGES = [
       entryOnline: "",
       resultOnline: '"{query}"',
       resultGeneric: "Entree",
-      cacheShowing: "Affichage depuis le cache local. Derniere mise a jour : {time}.",
-      cacheLoading: "Aucune copie locale disponible. Chargement en ligne.",
-      cacheUpdated: "Entree mise a jour en ligne et enregistree dans le cache local.",
-      cacheFallback:
-        "Connexion indisponible. Affichage de la copie locale enregistree le {time}.",
-      cacheMissing: "Aucun cache local disponible pour cette entree.",
       entryLoading: "Chargement de l'entree...",
       translationLoading: "Traduction du lemme en cours...",
       entryUnavailable: "Impossible de charger cette entree en ligne pour le moment.",
@@ -187,16 +156,12 @@ window.UI_LANGUAGES = [
       summaryMultiple: "{count} resultados encontrados.",
       summaryNoResults: "No se encontraron resultados.",
       summaryQueryBlocked: "Esta busqueda no esta disponible en esta version escolar.",
-      summarySearchCache:
-        "Resultados cargados desde la cache local. Ultima actualizacion: {time}.",
-      summarySearchFallback:
-        "La busqueda en vivo no esta disponible. Mostrando resultados guardados el {time}.",
       summarySearchOffline: "La busqueda en linea no esta disponible en este momento.",
       summarySingleWordOnly: "Escribe una sola palabra cada vez.",
       emptyTitle: "Ninguna entrada seleccionada",
       emptyCopy:
         "Cuando elijas un resultado, aqui apareceran la definicion y las demas informaciones de la palabra.",
-      entryContentTitle: "Contenido de la entrada",
+      entryContentTitle: "Explicacion",
       entryLemmaTranslationLabel: "Traduccion:",
       entryItalianTranslationLabel: "Traduccion al italiano:",
       primaryDefinitionLabel: "Definicion principal",
@@ -205,12 +170,6 @@ window.UI_LANGUAGES = [
       entryOnline: "",
       resultOnline: '"{query}"',
       resultGeneric: "Entrada",
-      cacheShowing: "Mostrando desde la cache local. Ultima actualizacion: {time}.",
-      cacheLoading: "No hay copia local disponible. Cargando en linea.",
-      cacheUpdated: "La entrada se actualizo en linea y se guardo en la cache local.",
-      cacheFallback:
-        "Conexion no disponible. Mostrando la copia local guardada el {time}.",
-      cacheMissing: "No hay cache local disponible para esta entrada.",
       entryLoading: "Cargando entrada...",
       translationLoading: "Traduciendo el lema...",
       entryUnavailable: "No pude cargar esta entrada en linea en este momento.",
@@ -241,16 +200,12 @@ window.UI_LANGUAGES = [
       summaryMultiple: "{count} Ergebnisse gefunden.",
       summaryNoResults: "Keine Ergebnisse gefunden.",
       summaryQueryBlocked: "Diese Suche ist in dieser Schulversion nicht verfugbar.",
-      summarySearchCache:
-        "Ergebnisse aus dem lokalen Cache geladen. Letzte Aktualisierung: {time}.",
-      summarySearchFallback:
-        "Die Live-Suche ist nicht verfugbar. Es werden die am {time} gespeicherten Ergebnisse angezeigt.",
       summarySearchOffline: "Die Online-Suche ist im Moment nicht verfugbar.",
       summarySingleWordOnly: "Gib immer nur ein Wort ein.",
       emptyTitle: "Kein Eintrag ausgewahlt",
       emptyCopy:
         "Wenn du ein Ergebnis auswahlst, erscheinen hier die Definition und weitere Informationen zum Wort.",
-      entryContentTitle: "Inhalt des Eintrags",
+      entryContentTitle: "Erklarung",
       entryLemmaTranslationLabel: "Ubersetzung:",
       entryItalianTranslationLabel: "Italienische Ubersetzung:",
       primaryDefinitionLabel: "Hauptdefinition",
@@ -259,12 +214,6 @@ window.UI_LANGUAGES = [
       entryOnline: "",
       resultOnline: '"{query}"',
       resultGeneric: "Eintrag",
-      cacheShowing: "Anzeige aus lokalem Cache. Letzte Aktualisierung: {time}.",
-      cacheLoading: "Keine locale Kopie verfugbar. Online-Laden lauft.",
-      cacheUpdated: "Eintrag online aktualisiert und im lokalen Cache gespeichert.",
-      cacheFallback:
-        "Verbindung nicht verfugbar. Die am {time} gespeicherte locale Kopie wird angezeigt.",
-      cacheMissing: "Kein localer Cache fur diesen Eintrag verfugbar.",
       entryLoading: "Eintrag wird geladen...",
       translationLoading: "Lemma wird ubersetzt...",
       entryUnavailable: "Ich konnte diesen Eintrag im Moment nicht online laden.",
