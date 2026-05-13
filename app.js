@@ -246,8 +246,8 @@ const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
 const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v21";
-const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v21";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v22";
+const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v22";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
 const TRANSLATION_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
@@ -1702,13 +1702,18 @@ async function translateText(text, sourceLanguageCode, targetLanguageCode) {
 function renderEntry(entry) {
   const posLabel = normalizeSpaces(entry?.posLabel || "");
   entryPos.textContent = posLabel.includes("·") ? "" : posLabel;
+  const targetTranslation = normalizeSpaces(entry?.targetTranslation || "");
   const italianTranslation = normalizeSpaces(entry?.italianTranslation || "");
-  entryTranslationSummary.textContent = italianTranslation
-    ? `${t("entryItalianTranslationLabel")} ${italianTranslation}`
+  const visibleTranslation = targetTranslation || italianTranslation;
+  const translationLabel = targetTranslation
+    ? t("entryLemmaTranslationLabel")
+    : t("entryItalianTranslationLabel");
+  entryTranslationSummary.textContent = visibleTranslation
+    ? `${translationLabel} ${visibleTranslation}`
     : "";
   entryLemma.textContent = entry.title;
   entryPronunciation.textContent = "";
-  entryContent.innerHTML = entry.renderedHtml || entry.html;
+  entryContent.innerHTML = entry.html;
   enhanceEntryContentStructure();
 }
 
@@ -1933,13 +1938,8 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
     posLabel: entryMetadata.posLabel,
     firstDefinition: entryMetadata.firstDefinition,
     sections: entryMetadata.sections,
-    html: cleanedHtml,
-    renderedHtml: cleanedHtml
+    html: cleanedHtml
   };
-}
-
-function getTranslationCacheId(title, languageCode, html) {
-  return `${normalizeText(title)}::${languageCode}::${html.length}`;
 }
 
 function getTextTranslationCacheId(text, sourceLanguageCode, targetLanguageCode, scope = "text") {
@@ -2010,7 +2010,7 @@ function extractEntryMetadata(html) {
   };
 }
 
-function cleanItalianLemmaTranslation(originalWord, translatedText, { allowSameAsOriginal = false } = {}) {
+function cleanLemmaTranslation(originalWord, translatedText, { allowSameAsOriginal = false } = {}) {
   const normalizedOriginal = normalizeText(originalWord);
   const cleanedText = normalizeSpaces(
     String(translatedText || "")
@@ -2043,140 +2043,76 @@ async function enrichEntryItalianTranslation(entry, activeTitle = activeEntryTit
     return entry;
   }
 
-  const sections = Array.isArray(entry.sections) ? entry.sections.slice(0, 2) : [];
-  const existingTranslation = normalizeSpaces(entry.italianTranslation || "");
-  const shouldReuseExistingTranslation =
-    existingTranslation &&
-    (sections.length <= 1 || existingTranslation.includes(";"));
+  const italianTranslation = await getEntryLemmaTranslation(entry, DEFAULT_UI_LANGUAGE);
 
-  if (shouldReuseExistingTranslation) {
+  if (activeEntryTitle !== activeTitle || currentEntryData?.title !== activeTitle) {
     return entry;
   }
 
-  const sourceText = entry.sourceTitle || entry.lookupTitle || entry.title;
-
-  try {
-    const sectionTranslations = [];
-
-    for (const section of sections) {
-      let translatedText = "";
-      let italianTranslation = "";
-
-      if (entry.sourceLanguageCode === "en" && isVerbSectionHeading(section.heading)) {
-        translatedText = await getTranslatedText(
-          `to ${sourceText}`,
-          entry.sourceLanguageCode,
-          DEFAULT_UI_LANGUAGE,
-          "lemma-verb"
-        );
-        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
-          allowSameAsOriginal: true
-        });
-      }
-
-      if (!italianTranslation) {
-        translatedText = await getTranslatedText(
-          `${sourceText} (${section.heading})`,
-          entry.sourceLanguageCode,
-          DEFAULT_UI_LANGUAGE,
-          "lemma-pos"
-        );
-        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
-          allowSameAsOriginal: true
-        });
-      }
-
-      if (!italianTranslation && section.definitions?.[0]) {
-        translatedText = await getTranslatedText(
-          section.definitions[0],
-          entry.sourceLanguageCode,
-          DEFAULT_UI_LANGUAGE,
-          "definition"
-        );
-        italianTranslation = normalizeSpaces(translatedText);
-      }
-
-      if (italianTranslation) {
-        sectionTranslations.push(italianTranslation);
-      }
-    }
-
-    let italianTranslation = [...new Set(sectionTranslations)].slice(0, 2).join("; ");
-
-    if (!italianTranslation && entry.posLabel) {
-      const translatedText = await getTranslatedText(
-        `${sourceText} (${entry.posLabel})`,
-        entry.sourceLanguageCode,
-        DEFAULT_UI_LANGUAGE,
-        "lemma-pos-fallback"
-      );
-      italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
-        allowSameAsOriginal: true
-      });
-    }
-
-    if (!italianTranslation && entry.firstDefinition) {
-      const translatedText = await getTranslatedText(
-        entry.firstDefinition,
-        entry.sourceLanguageCode,
-        DEFAULT_UI_LANGUAGE,
-        "definition-fallback"
-      );
-      italianTranslation = normalizeSpaces(translatedText);
-    }
-
-    if (activeEntryTitle !== activeTitle || currentEntryData?.title !== activeTitle) {
-      return entry;
-    }
-
-    entry.italianTranslation = italianTranslation;
-  } catch (error) {
-    entry.italianTranslation = "";
-  }
-
+  entry.italianTranslation = italianTranslation;
   return entry;
 }
 
-async function translateHtmlContent(html, sourceLanguageCode, targetLanguageCode) {
-  const parser = new DOMParser();
-  const documentFragment = parser.parseFromString(`<div>${html}</div>`, "text/html");
-  const root = documentFragment.body.firstElementChild;
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  const textNodes = [];
-
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
-    if (node.nodeValue.trim()) {
-      textNodes.push(node);
-    }
+async function getEntryLemmaTranslation(entry, targetLanguageCode) {
+  if (!entry || !targetLanguageCode) {
+    return "";
   }
 
-  const uniqueTexts = [...new Set(textNodes.map((node) => node.nodeValue.trim()))];
-  const translatedPairs = await Promise.all(
-    uniqueTexts.map(async (originalText) => {
-      try {
-        const translatedText = await translateText(
-          originalText,
-          sourceLanguageCode,
-          targetLanguageCode
-        );
-        return [originalText, translatedText || originalText];
-      } catch (error) {
-        return [originalText, originalText];
+  const sourceLanguageCode =
+    entry.sourceLanguageCode || activeDictionaryCode || DEFAULT_UI_LANGUAGE;
+
+  if (sourceLanguageCode === targetLanguageCode) {
+    return "";
+  }
+
+  const sections = Array.isArray(entry.sections) ? entry.sections.slice(0, 2) : [];
+  const sourceText = entry.sourceTitle || entry.lookupTitle || entry.title;
+  const translations = [];
+
+  try {
+    for (const section of sections.length ? sections : [{ heading: entry.posLabel || "" }]) {
+      const heading = normalizeSpaces(section.heading || "");
+      const prompt =
+        sourceLanguageCode === "en" && isVerbSectionHeading(heading)
+          ? `to ${sourceText}`
+          : heading
+            ? `${sourceText} (${heading})`
+            : sourceText;
+      const translatedText = await getTranslatedText(
+        prompt,
+        sourceLanguageCode,
+        targetLanguageCode,
+        "lemma-only"
+      );
+      const lemmaTranslation = cleanLemmaTranslation(sourceText, translatedText, {
+        allowSameAsOriginal: true
+      });
+
+      if (lemmaTranslation) {
+        translations.push(lemmaTranslation);
       }
-    })
-  );
-  const translations = new Map(translatedPairs);
-
-  textNodes.forEach((node) => {
-    const originalText = node.nodeValue.trim();
-    const translatedText = translations.get(originalText);
-    if (translatedText) {
-      node.nodeValue = node.nodeValue.replace(originalText, translatedText);
     }
-  });
 
-  return root.innerHTML;
+    if (!translations.length) {
+      const translatedText = await getTranslatedText(
+        sourceText,
+        sourceLanguageCode,
+        targetLanguageCode,
+        "lemma-only-fallback"
+      );
+      const lemmaTranslation = cleanLemmaTranslation(sourceText, translatedText, {
+        allowSameAsOriginal: true
+      });
+
+      if (lemmaTranslation) {
+        translations.push(lemmaTranslation);
+      }
+    }
+
+    return [...new Set(translations)].slice(0, 2).join("; ");
+  } catch (error) {
+    return "";
+  }
 }
 
 async function updateEntryTranslation() {
@@ -2189,54 +2125,29 @@ async function updateEntryTranslation() {
     currentEntryData.sourceLanguageCode || activeDictionaryCode || DEFAULT_UI_LANGUAGE;
 
   if (currentLanguageCode === sourceLanguageCode) {
-    currentEntryData.renderedHtml = currentEntryData.html;
+    currentEntryData.targetTranslation = "";
     renderEntry(currentEntryData);
     return;
   }
 
-  const translationCacheId = getTranslationCacheId(
-    `${sourceLanguageCode}::${currentEntryData.sourceTitle || currentEntryData.lookupTitle || currentEntryData.title}`,
-    currentLanguageCode,
-    currentEntryData.html
-  );
-  const cachedTranslation = getCachedValue(
-    TRANSLATION_CACHE_KEY,
-    translationCacheId,
-    TRANSLATION_CACHE_TTL_MS
-  );
-
-  if (cachedTranslation) {
-    currentEntryData.renderedHtml = cachedTranslation.data.translatedHtml;
-    if (localRequestId === translationRequestId) {
-      renderEntry(currentEntryData);
-    }
-    return;
-  }
-
-  entryContent.innerHTML = `<p class="loading-note">${t("translationLoading")}</p>`;
+  currentEntryData.targetTranslation = "";
+  renderEntry(currentEntryData);
 
   try {
-    const translatedHtml = await translateHtmlContent(
-      currentEntryData.html,
-      sourceLanguageCode,
-      currentLanguageCode
-    );
+    const targetTranslation = await getEntryLemmaTranslation(currentEntryData, currentLanguageCode);
 
     if (localRequestId !== translationRequestId || activeEntryTitle !== currentEntryData.title) {
       return;
     }
 
-    currentEntryData.renderedHtml = translatedHtml;
-    setCachedValue(TRANSLATION_CACHE_KEY, translationCacheId, {
-      translatedHtml
-    });
+    currentEntryData.targetTranslation = targetTranslation;
     renderEntry(currentEntryData);
   } catch (error) {
     if (localRequestId !== translationRequestId || activeEntryTitle !== currentEntryData.title) {
       return;
     }
 
-    currentEntryData.renderedHtml = currentEntryData.html;
+    currentEntryData.targetTranslation = "";
     renderEntry(currentEntryData);
   }
 }

@@ -33,6 +33,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Quando scegli un risultato, qui compariranno la definizione e le altre informazioni della parola.",
       entryContentTitle: "Contenuto della voce",
+      entryLemmaTranslationLabel: "Traduzione:",
       entryItalianTranslationLabel: "Traduzione in italiano:",
       primaryDefinitionLabel: "Definizione principale",
       speakStart: "Ascolta",
@@ -49,7 +50,7 @@ window.UI_LANGUAGES = [
         "Connessione non disponibile. Sto mostrando la copia locale salvata il {time}.",
       cacheMissing: "Nessuna cache locale disponibile per questa voce.",
       entryLoading: "Caricamento della voce in corso...",
-      translationLoading: "Traduzione del contenuto in corso...",
+      translationLoading: "Traduzione del lemma in corso...",
       entryUnavailable:
         "Non sono riuscito a caricare questa voce online in questo momento.",
       entryEmpty: "Nessun contenuto disponibile."
@@ -88,6 +89,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "When you choose a result, the definition and other information about the word will appear here.",
       entryContentTitle: "Entry content",
+      entryLemmaTranslationLabel: "Translation:",
       entryItalianTranslationLabel: "Italian translation:",
       primaryDefinitionLabel: "Main definition",
       speakStart: "Listen",
@@ -102,7 +104,7 @@ window.UI_LANGUAGES = [
         "Connection unavailable. Showing the local copy saved on {time}.",
       cacheMissing: "No local cache available for this entry.",
       entryLoading: "Loading entry...",
-      translationLoading: "Translating content...",
+      translationLoading: "Translating lemma...",
       entryUnavailable: "I could not load this entry online right now.",
       entryEmpty: "No content available."
     }
@@ -141,6 +143,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Lorsque vous choisissez un resultat, la definition et les autres informations apparaitront ici.",
       entryContentTitle: "Contenu de l'entree",
+      entryLemmaTranslationLabel: "Traduction :",
       entryItalianTranslationLabel: "Traduction italienne :",
       primaryDefinitionLabel: "Definition principale",
       speakStart: "Ecouter",
@@ -155,7 +158,7 @@ window.UI_LANGUAGES = [
         "Connexion indisponible. Affichage de la copie locale enregistree le {time}.",
       cacheMissing: "Aucun cache local disponible pour cette entree.",
       entryLoading: "Chargement de l'entree...",
-      translationLoading: "Traduction du contenu en cours...",
+      translationLoading: "Traduction du lemme en cours...",
       entryUnavailable: "Impossible de charger cette entree en ligne pour le moment.",
       entryEmpty: "Aucun contenu disponibile."
     }
@@ -194,6 +197,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Cuando elijas un resultado, aqui apareceran la definicion y las demas informaciones de la palabra.",
       entryContentTitle: "Contenido de la entrada",
+      entryLemmaTranslationLabel: "Traduccion:",
       entryItalianTranslationLabel: "Traduccion al italiano:",
       primaryDefinitionLabel: "Definicion principal",
       speakStart: "Escuchar",
@@ -208,7 +212,7 @@ window.UI_LANGUAGES = [
         "Conexion no disponible. Mostrando la copia local guardada el {time}.",
       cacheMissing: "No hay cache local disponible para esta entrada.",
       entryLoading: "Cargando entrada...",
-      translationLoading: "Traduciendo el contenido...",
+      translationLoading: "Traduciendo el lema...",
       entryUnavailable: "No pude cargar esta entrada en linea en este momento.",
       entryEmpty: "No hay contenido disponible."
     }
@@ -247,6 +251,7 @@ window.UI_LANGUAGES = [
       emptyCopy:
         "Wenn du ein Ergebnis auswahlst, erscheinen hier die Definition und weitere Informationen zum Wort.",
       entryContentTitle: "Inhalt des Eintrags",
+      entryLemmaTranslationLabel: "Ubersetzung:",
       entryItalianTranslationLabel: "Italienische Ubersetzung:",
       primaryDefinitionLabel: "Hauptdefinition",
       speakStart: "Anhoren",
@@ -261,7 +266,7 @@ window.UI_LANGUAGES = [
         "Verbindung nicht verfugbar. Die am {time} gespeicherte locale Kopie wird angezeigt.",
       cacheMissing: "Kein localer Cache fur diesen Eintrag verfugbar.",
       entryLoading: "Eintrag wird geladen...",
-      translationLoading: "Inhalt wird ubersetzt...",
+      translationLoading: "Lemma wird ubersetzt...",
       entryUnavailable: "Ich konnte diesen Eintrag im Moment nicht online laden.",
       entryEmpty: "Kein Inhalt verfugbar."
     }

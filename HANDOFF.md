@@ -28,7 +28,7 @@ Il progetto e' un vocabolario online locale che:
 - ricerca live online
 - ricerca limitata al lemma esatto tramite verifica diretta della pagina
 - traduzione della query verso l'italiano quando la lingua selezionata non e' italiano
-- traduzione del contenuto della voce nella lingua selezionata
+- traduzione del lemma nella lingua selezionata, senza tradurre il contenuto della voce
 - cache locale per risultati, voci e traduzioni
 - due selettori lingua sincronizzati
 - pulsanti audio `Ascolta` e `Stop`
@@ -59,20 +59,20 @@ In `app.js` esiste un filtro HTML che prova a rimuovere:
 ## Cache attuali
 
 - search: `vocabolario.searchCache.v6`
-- entry: `vocabolario.entryCache.v21`
-- translation: `vocabolario.translationCache.v21`
+- entry: `vocabolario.entryCache.v22`
+- translation: `vocabolario.translationCache.v22`
 
 ## Traduzione
 
 La traduzione attuale:
 
 - traduce l'interfaccia tramite `ui-languages.js`
-- traduce il contenuto della voce via chiamate web nel browser
-- traduce i blocchi di testo in parallelo per ridurre la lentezza
+- traduce solo il lemma della voce via chiamate web nel browser
+- mantiene il contenuto della voce nella lingua del vocabolario sorgente
 
 Nota pratica:
 
-- la traduzione ora funziona, ma non e' istantanea
+- la traduzione del lemma ora funziona, ma non e' istantanea
 - e' stata giudicata accettabile dall'utente
 
 ## Audio
