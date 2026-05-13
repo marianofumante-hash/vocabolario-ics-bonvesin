@@ -245,9 +245,9 @@ const UI_LANGUAGE_STORAGE_KEY = "vocabolario.uiLanguage.v1";
 const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
-const SEARCH_CACHE_KEY = "vocabolario.searchCache.v5";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v19";
-const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v19";
+const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v20";
+const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v20";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
 const TRANSLATION_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
@@ -1596,6 +1596,39 @@ function getSearchCacheId(query, languageCode) {
   return `${languageCode}::${normalizeText(query)}`;
 }
 
+function hasPreferredLanguageSection(rawHtml, languageCode = DEFAULT_UI_LANGUAGE) {
+  const dictionaryConfig = getDictionaryConfig(languageCode);
+  const languageSectionTitles = dictionaryConfig.languageSectionTitles || [];
+
+  if (!languageSectionTitles.length) {
+    return true;
+  }
+
+  const parser = new DOMParser();
+  const documentFragment = parser.parseFromString(rawHtml, "text/html");
+  const root =
+    documentFragment.querySelector(".mw-parser-output") || documentFragment.body;
+
+  return Array.from(root.querySelectorAll("h2")).some((heading) => {
+    const headingTitle = normalizeText(heading.textContent);
+    return languageSectionTitles.some(
+      (languageTitle) =>
+        headingTitle === languageTitle || headingTitle.includes(languageTitle)
+    );
+  });
+}
+
+function sanitizeSearchResults(results, query, languageCode = activeDictionaryCode) {
+  const exactResults = filterExactMatchResults(
+    filterSchoolSafeResults(Array.isArray(results) ? results : []),
+    query
+  );
+
+  return exactResults.filter((entry) => {
+    return !entry?.languageCode || entry.languageCode === languageCode;
+  });
+}
+
 async function searchEntries(query, languageCode = DEFAULT_UI_LANGUAGE) {
   const normalizedQuery = normalizeText(query);
 
@@ -1623,8 +1656,24 @@ async function searchEntries(query, languageCode = DEFAULT_UI_LANGUAGE) {
     return [];
   }
 
+  const parseUrl = buildApiUrl(languageCode, {
+    action: "parse",
+    page: exactPage.title,
+    prop: "text|displaytitle"
+  });
+  const parseData = await fetchJson(parseUrl);
+  const parsed = parseData?.parse;
+
+  if (!parsed?.text?.["*"] || !hasPreferredLanguageSection(parsed.text["*"], languageCode)) {
+    return [];
+  }
+
+  const sourceTitle = parsed.displaytitle
+    ? parserSafeText(parsed.displaytitle)
+    : exactPage.title;
+
   return [{
-    title: exactPage.title,
+    title: sourceTitle,
     languageCode,
     lookupTitle: exactPage.title,
     url: `${getWiktionaryPageBaseUrl(languageCode)}${encodeURIComponent(exactPage.title)}`
@@ -1866,6 +1915,10 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
 
   if (!parsed) {
     throw new Error("Voce non disponibile");
+  }
+
+  if (!hasPreferredLanguageSection(parsed.text["*"], languageCode)) {
+    throw new Error("Voce non disponibile nella lingua selezionata");
   }
 
   const cleanedHtml = cleanParsedHtml(parsed.text["*"], languageCode);
@@ -2370,9 +2423,12 @@ async function handleSearch(query) {
     searchCacheId,
     SEARCH_CACHE_TTL_MS
   );
+  const cachedResults = cachedSearch
+    ? sanitizeSearchResults(cachedSearch.data, effectiveQuery, activeDictionaryCode)
+    : [];
 
-  if (cachedSearch) {
-    currentResults = cachedSearch.data;
+  if (cachedResults.length) {
+    currentResults = cachedResults;
     renderResults(currentResults);
     setSummaryByKey("summarySearchCache", {
       time: formatSavedAt(cachedSearch.savedAt)
@@ -2382,11 +2438,10 @@ async function handleSearch(query) {
   }
 
   try {
-    const results = filterExactMatchResults(
-      filterSchoolSafeResults(
-        await searchEntries(effectiveQuery, activeDictionaryCode)
-      ),
-      effectiveQuery
+    const results = sanitizeSearchResults(
+      await searchEntries(effectiveQuery, activeDictionaryCode),
+      effectiveQuery,
+      activeDictionaryCode
     );
 
     if (requestId !== latestSearchRequestId) {
@@ -2409,7 +2464,7 @@ async function handleSearch(query) {
     );
     renderResults(results);
   } catch (error) {
-    if (!cachedSearch) {
+    if (!cachedResults.length) {
       currentResults = [];
       renderResults([]);
       setSummaryByKey("summarySearchOffline", {}, true);
@@ -2417,7 +2472,7 @@ async function handleSearch(query) {
       return;
     }
 
-    currentResults = cachedSearch.data;
+    currentResults = cachedResults;
     renderResults(currentResults);
     setSummaryByKey(
       "summarySearchFallback",

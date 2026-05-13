@@ -58,9 +58,9 @@ In `app.js` esiste un filtro HTML che prova a rimuovere:
 
 ## Cache attuali
 
-- search: `vocabolario.searchCache.v5`
-- entry: `vocabolario.entryCache.v19`
-- translation: `vocabolario.translationCache.v19`
+- search: `vocabolario.searchCache.v6`
+- entry: `vocabolario.entryCache.v20`
+- translation: `vocabolario.translationCache.v20`
 
 ## Traduzione
 
