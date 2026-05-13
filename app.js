@@ -246,8 +246,8 @@ const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
 const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v20";
-const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v20";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v21";
+const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v21";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
 const TRANSLATION_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
@@ -2010,7 +2010,7 @@ function extractEntryMetadata(html) {
   };
 }
 
-function cleanItalianLemmaTranslation(originalWord, translatedText) {
+function cleanItalianLemmaTranslation(originalWord, translatedText, { allowSameAsOriginal = false } = {}) {
   const normalizedOriginal = normalizeText(originalWord);
   const cleanedText = normalizeSpaces(
     String(translatedText || "")
@@ -2022,7 +2022,7 @@ function cleanItalianLemmaTranslation(originalWord, translatedText) {
     return "";
   }
 
-  if (normalizeText(cleanedText) === normalizedOriginal) {
+  if (!allowSameAsOriginal && normalizeText(cleanedText) === normalizedOriginal) {
     return "";
   }
 
@@ -2069,7 +2069,9 @@ async function enrichEntryItalianTranslation(entry, activeTitle = activeEntryTit
           DEFAULT_UI_LANGUAGE,
           "lemma-verb"
         );
-        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText);
+        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
+          allowSameAsOriginal: true
+        });
       }
 
       if (!italianTranslation) {
@@ -2079,7 +2081,9 @@ async function enrichEntryItalianTranslation(entry, activeTitle = activeEntryTit
           DEFAULT_UI_LANGUAGE,
           "lemma-pos"
         );
-        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText);
+        italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
+          allowSameAsOriginal: true
+        });
       }
 
       if (!italianTranslation && section.definitions?.[0]) {
@@ -2106,7 +2110,9 @@ async function enrichEntryItalianTranslation(entry, activeTitle = activeEntryTit
         DEFAULT_UI_LANGUAGE,
         "lemma-pos-fallback"
       );
-      italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText);
+      italianTranslation = cleanItalianLemmaTranslation(sourceText, translatedText, {
+        allowSameAsOriginal: true
+      });
     }
 
     if (!italianTranslation && entry.firstDefinition) {
