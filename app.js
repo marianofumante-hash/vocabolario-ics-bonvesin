@@ -245,9 +245,9 @@ const UI_LANGUAGE_STORAGE_KEY = "vocabolario.uiLanguage.v1";
 const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
-const SEARCH_CACHE_KEY = "vocabolario.searchCache.v4";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v18";
-const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v18";
+const SEARCH_CACHE_KEY = "vocabolario.searchCache.v5";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v19";
+const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v19";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
 const TRANSLATION_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
@@ -401,6 +401,30 @@ function cleanDefinitionText(value) {
       .replace(/^((\[\d+\]|\d+)[\.\):]?\s*)+/g, "")
       .replace(/\s*;\s*/g, "; ")
   );
+}
+
+function isEditorialPlaceholderText(value) {
+  const normalizedValue = normalizeText(value);
+
+  if (!normalizedValue) {
+    return true;
+  }
+
+  const editorialPlaceholderPatterns = [
+    "definizione mancante",
+    "aggiungila tu",
+    "missing definition",
+    "add it yourself",
+    "definition manquante",
+    "ajoutez la",
+    "definicion faltante",
+    "definicion ausente",
+    "agregala",
+    "fehlende definition",
+    "erganze sie"
+  ];
+
+  return editorialPlaceholderPatterns.some((pattern) => normalizedValue.includes(pattern));
 }
 
 function normalizeMetadataText(value) {
@@ -968,7 +992,14 @@ function cleanParsedHtml(rawHtml, languageCode = currentLanguageCode) {
     "wikibooks contiene",
     "wikinotizie contiene",
     "wikisource contiene",
-    "altri progetti"
+    "altri progetti",
+    "definizione mancante",
+    "aggiungila tu",
+    "missing definition",
+    "add it yourself",
+    "definition manquante",
+    "definicion faltante",
+    "fehlende definition"
   ];
 
   root.querySelectorAll([
@@ -1215,7 +1246,10 @@ function cleanParsedHtml(rawHtml, languageCode = currentLanguageCode) {
       return;
     }
 
-    if (blockedTextPatterns.some((pattern) => text.includes(pattern))) {
+    if (
+      blockedTextPatterns.some((pattern) => text.includes(pattern)) ||
+      isEditorialPlaceholderText(node.textContent)
+    ) {
       node.remove();
     }
   });
@@ -1402,6 +1436,7 @@ function cleanParsedHtml(rawHtml, languageCode = currentLanguageCode) {
 
                 if (
                   !definitionText ||
+                  isEditorialPlaceholderText(definitionText) ||
                   looksLikeInflectionLine(definitionText, entryLemma?.textContent || "") ||
                   /^(ipa|horbeispiele|reime)[:：]/i.test(normalizeText(definitionText))
                 ) {
@@ -1440,6 +1475,10 @@ function cleanParsedHtml(rawHtml, languageCode = currentLanguageCode) {
                 continue;
               }
 
+              if (isEditorialPlaceholderText(`${label} ${body}`)) {
+                continue;
+              }
+
               if (label && !body) {
                 definitions.push(cleanDefinitionText(label));
                 continue;
@@ -1465,7 +1504,7 @@ function cleanParsedHtml(rawHtml, languageCode = currentLanguageCode) {
               const definitionText = cleanDefinitionText(
                 extractCleanText(item, { stripNestedLists: true })
               );
-              if (definitionText) {
+              if (definitionText && !isEditorialPlaceholderText(definitionText)) {
                 definitions.push(definitionText);
               }
             });
@@ -1558,24 +1597,38 @@ function getSearchCacheId(query, languageCode) {
 }
 
 async function searchEntries(query, languageCode = DEFAULT_UI_LANGUAGE) {
+  const normalizedQuery = normalizeText(query);
+
+  if (!normalizedQuery) {
+    return [];
+  }
+
   const url = buildApiUrl(languageCode, {
-    action: "opensearch",
-    search: query,
-    limit: String(MAX_SEARCH_RESULTS),
-    namespace: "0"
+    action: "query",
+    titles: query.trim(),
+    redirects: "1"
   });
 
   const data = await fetchJson(url);
-  const titles = Array.isArray(data[1]) ? data[1] : [];
-  const urls = Array.isArray(data[3]) ? data[3] : [];
-  const results = titles.map((title, index) => ({
-    title,
-    languageCode,
-    lookupTitle: title,
-    url: urls[index] || `${getWiktionaryPageBaseUrl(languageCode)}${encodeURIComponent(title)}`
-  }));
+  const pages = Object.values(data?.query?.pages || {});
+  const exactPage = pages.find((page) => {
+    if (!page || page.missing !== undefined) {
+      return false;
+    }
 
-  return results;
+    return normalizeText(page.title) === normalizedQuery;
+  });
+
+  if (!exactPage) {
+    return [];
+  }
+
+  return [{
+    title: exactPage.title,
+    languageCode,
+    lookupTitle: exactPage.title,
+    url: `${getWiktionaryPageBaseUrl(languageCode)}${encodeURIComponent(exactPage.title)}`
+  }].slice(0, MAX_SEARCH_RESULTS);
 }
 
 async function translateText(text, sourceLanguageCode, targetLanguageCode) {
@@ -2286,6 +2339,16 @@ async function handleSearch(query) {
     resultsContainer.innerHTML = "";
     setSummaryByKey("summaryIdle");
     activeEntryTitle = null;
+    showEmptyState();
+    return;
+  }
+
+  if (/\s/.test(effectiveQuery)) {
+    currentResults = [];
+    currentEntryData = null;
+    resultsContainer.innerHTML = "";
+    activeEntryTitle = null;
+    setSummaryByKey("summarySingleWordOnly", {}, true);
     showEmptyState();
     return;
   }

@@ -26,6 +26,7 @@ Il progetto e' un vocabolario online locale che:
 ## Comportamenti attualmente presenti
 
 - ricerca live online
+- ricerca limitata al lemma esatto tramite verifica diretta della pagina
 - traduzione della query verso l'italiano quando la lingua selezionata non e' italiano
 - traduzione del contenuto della voce nella lingua selezionata
 - cache locale per risultati, voci e traduzioni
@@ -53,6 +54,13 @@ In `app.js` esiste un filtro HTML che prova a rimuovere:
 - rimandi ad altri progetti
 - link attivi
 - sezioni non desiderate in altre lingue
+- righe editoriali vuote come `definizione mancante`
+
+## Cache attuali
+
+- search: `vocabolario.searchCache.v5`
+- entry: `vocabolario.entryCache.v19`
+- translation: `vocabolario.translationCache.v19`
 
 ## Traduzione
 
