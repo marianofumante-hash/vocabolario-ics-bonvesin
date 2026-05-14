@@ -60,7 +60,7 @@ In `app.js` esiste un filtro HTML che prova a rimuovere:
 ## Cache attuali
 
 - search: `vocabolario.searchCache.v6`
-- entry: `vocabolario.entryCache.v24`
+- entry: `vocabolario.entryCache.v25`
 - translation: `vocabolario.translationCache.v22`
 
 ## Traduzione

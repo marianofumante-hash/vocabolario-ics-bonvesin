@@ -246,7 +246,7 @@ const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
 const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v24";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v25";
 const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v22";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
@@ -2055,6 +2055,7 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
   }
 
   const originLabel = extractEntryOriginLabel(parsed.text["*"], languageCode);
+  const rawGenderLabel = extractEntryGenderLabelFromRawHtml(parsed.text["*"], languageCode);
   const cleanedHtml = cleanParsedHtml(parsed.text["*"], languageCode);
   const entryMetadata = extractEntryMetadata(cleanedHtml);
 
@@ -2065,7 +2066,7 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
     sourceTitle,
     sourceLanguageCode: languageCode,
     posLabel: entryMetadata.posLabel,
-    genderLabel: entryMetadata.genderLabel,
+    genderLabel: entryMetadata.genderLabel || rawGenderLabel,
     originLabel,
     firstDefinition: entryMetadata.firstDefinition,
     sections: entryMetadata.sections,
@@ -2154,6 +2155,40 @@ function extractEntryOriginLabel(rawHtml, languageCode = currentLanguageCode) {
   }
 
   return originParts[0] || "";
+}
+
+function extractEntryGenderLabelFromRawHtml(rawHtml, languageCode = currentLanguageCode) {
+  const parser = new DOMParser();
+  const documentFragment = parser.parseFromString(rawHtml, "text/html");
+  const root = documentFragment.body;
+  const config = getDictionaryConfig(languageCode);
+  const headings = Array.from(root.querySelectorAll("h2, h3, h4"));
+  const lexicalHeading = headings.find((heading) =>
+    config.lexicalSectionTitles.some((sectionTitle) =>
+      normalizeText(heading.textContent).includes(sectionTitle)
+    ) &&
+    !matchesBlockedHeadingTitle(heading.textContent, config.blockedHeadingPatterns)
+  );
+
+  if (!lexicalHeading) {
+    return "";
+  }
+
+  let nextNode = lexicalHeading.closest(".mw-heading")?.nextElementSibling || lexicalHeading.nextElementSibling;
+
+  while (nextNode && !/^H[2-6]$/.test(nextNode.tagName) && !nextNode.classList?.contains("mw-heading")) {
+    if (nextNode.tagName === "P") {
+      const genderLabel = findGenderLabelInText(nextNode.textContent);
+
+      if (genderLabel) {
+        return genderLabel;
+      }
+    }
+
+    nextNode = nextNode.nextElementSibling;
+  }
+
+  return "";
 }
 
 function extractEntryMetadata(html) {
