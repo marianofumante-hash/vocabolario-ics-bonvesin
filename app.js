@@ -246,7 +246,7 @@ const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
 const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v25";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v26";
 const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v22";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
@@ -2298,7 +2298,13 @@ function findGenderLabelInText(text) {
     return t("genderMasculine");
   }
 
-  if (/\bneuter\b/.test(normalizedText) || /\bneutro\b/.test(normalizedText) || /\bn\.\b/.test(normalizedText)) {
+  if (
+    /\bsubstantiv\s*,?\s*n\b/.test(normalizedText) ||
+    /\bgenus\s*:?\s*neutrum\b/.test(normalizedText) ||
+    /\bneuter\b/.test(normalizedText) ||
+    /\bneutro\b/.test(normalizedText) ||
+    /\bn\.\b/.test(normalizedText)
+  ) {
     return t("genderNeuter");
   }
 
