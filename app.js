@@ -246,7 +246,7 @@ const DICTIONARY_LANGUAGE_STORAGE_KEY = "vocabolario.dictionaryLanguage.v1";
 const READING_PREFERENCES_STORAGE_KEY = "vocabolario.readingPreferences.v1";
 
 const SEARCH_CACHE_KEY = "vocabolario.searchCache.v6";
-const ENTRY_CACHE_KEY = "vocabolario.entryCache.v23";
+const ENTRY_CACHE_KEY = "vocabolario.entryCache.v24";
 const TRANSLATION_CACHE_KEY = "vocabolario.translationCache.v22";
 const SEARCH_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ENTRY_CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
@@ -412,6 +412,18 @@ function formatDisplayLabel(value) {
   }
 
   return cleanedValue.charAt(0).toUpperCase() + cleanedValue.slice(1);
+}
+
+function removeLemmaPrefix(text, lemma) {
+  const cleanedText = normalizeSpaces(text);
+  const cleanedLemma = normalizeSpaces(lemma);
+
+  if (!cleanedText || !cleanedLemma) {
+    return cleanedText;
+  }
+
+  const escapedLemma = cleanedLemma.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return normalizeSpaces(cleanedText.replace(new RegExp(`^${escapedLemma}\\b\\s*`, "i"), ""));
 }
 
 function isEditorialPlaceholderText(value) {
@@ -1717,6 +1729,70 @@ function renderEntryTranslationSummary(label, value) {
   entryTranslationSummary.append(labelElement, valueElement);
 }
 
+function getPartOfSpeechAbbreviation(posLabel) {
+  const normalizedLabel = normalizeText(posLabel);
+
+  if (normalizedLabel.includes(normalizeText(t("posNoun"))) || normalizedLabel.includes("noun") || normalizedLabel.includes("nom") || normalizedLabel.includes("substantiv")) {
+    return "s.";
+  }
+
+  if (normalizedLabel.includes(normalizeText(t("posVerb"))) || normalizedLabel.includes("verb")) {
+    return "v.";
+  }
+
+  if (normalizedLabel.includes(normalizeText(t("posAdjective"))) || normalizedLabel.includes("adject")) {
+    return "agg.";
+  }
+
+  if (normalizedLabel.includes(normalizeText(t("posAdverb"))) || normalizedLabel.includes("adverb")) {
+    return "avv.";
+  }
+
+  return "";
+}
+
+function getGenderAbbreviation(genderLabel) {
+  const normalizedLabel = normalizeText(genderLabel);
+
+  if (normalizedLabel.includes("femmin") || normalizedLabel.includes("feminin") || normalizedLabel.includes("femenin")) {
+    return "f.";
+  }
+
+  if (normalizedLabel.includes("maschil") || normalizedLabel.includes("mascul") || normalizedLabel.includes("maskulin")) {
+    return "m.";
+  }
+
+  if (normalizedLabel.includes("neutr")) {
+    return "n.";
+  }
+
+  return "";
+}
+
+function buildDictionaryDefinitionLine(entry, posLabel, genderLabel) {
+  const lemma = normalizeSpaces(entry?.title || entry?.sourceTitle || "");
+  const firstDefinition = cleanDefinitionText(entry?.firstDefinition || "");
+  const origin = normalizeSpaces(entry?.originLabel || "");
+  const grammar = [getPartOfSpeechAbbreviation(posLabel), getGenderAbbreviation(genderLabel)]
+    .filter(Boolean)
+    .join(" ");
+  const pieces = [];
+
+  if (lemma) {
+    pieces.push(lemma);
+  }
+
+  if (grammar) {
+    pieces.push(grammar);
+  }
+
+  const prefix = pieces.join(" ");
+  const originText = origin ? ` [${removeLemmaPrefix(origin, lemma)}]` : "";
+  const explanation = firstDefinition ? ` - ${formatDisplayLabel(firstDefinition)}` : "";
+
+  return normalizeSpaces(`${prefix}${originText}${explanation}`);
+}
+
 function renderEntry(entry) {
   const posLabel = formatDisplayLabel(entry?.posLabel || "");
   const genderLabel = formatDisplayLabel(entry?.genderLabel || "");
@@ -1731,7 +1807,7 @@ function renderEntry(entry) {
     ? t("entryLemmaTranslationLabel")
     : t("entryItalianTranslationLabel");
   renderEntryTranslationSummary(translationLabel, visibleTranslation);
-  entryDefinitionSummary.textContent = cleanDefinitionText(entry?.firstDefinition || "");
+  entryDefinitionSummary.textContent = buildDictionaryDefinitionLine(entry, posLabel, genderLabel);
   entryLemma.textContent = entry.title;
   entryPronunciation.textContent = "";
   entryContent.innerHTML = entry.html;
@@ -1978,6 +2054,7 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
     throw new Error("Voce non disponibile nella lingua selezionata");
   }
 
+  const originLabel = extractEntryOriginLabel(parsed.text["*"], languageCode);
   const cleanedHtml = cleanParsedHtml(parsed.text["*"], languageCode);
   const entryMetadata = extractEntryMetadata(cleanedHtml);
 
@@ -1988,6 +2065,8 @@ async function fetchEntry(title, languageCode = currentLanguageCode) {
     sourceTitle,
     sourceLanguageCode: languageCode,
     posLabel: entryMetadata.posLabel,
+    genderLabel: entryMetadata.genderLabel,
+    originLabel,
     firstDefinition: entryMetadata.firstDefinition,
     sections: entryMetadata.sections,
     html: cleanedHtml
@@ -2022,6 +2101,59 @@ async function getTranslatedText(text, sourceLanguageCode, targetLanguageCode, s
   }
 
   return translatedText;
+}
+
+function extractEntryOriginLabel(rawHtml, languageCode = currentLanguageCode) {
+  const parser = new DOMParser();
+  const documentFragment = parser.parseFromString(rawHtml, "text/html");
+  const root = documentFragment.body;
+  const config = getDictionaryConfig(languageCode);
+  const headings = Array.from(root.querySelectorAll("h2, h3, h4"));
+  const originHeading = headings.find((heading) => {
+    const title = normalizeText(heading.textContent);
+
+    return [
+      "etimologia",
+      "derivazione",
+      "etymology",
+      "origin",
+      "etymologie",
+      "herkunft"
+    ].some((pattern) => title.includes(pattern));
+  });
+
+  if (!originHeading) {
+    return "";
+  }
+
+  let nextNode = originHeading.closest(".mw-heading")?.nextElementSibling || originHeading.nextElementSibling;
+  const originParts = [];
+
+  while (nextNode && !/^H[2-6]$/.test(nextNode.tagName) && !nextNode.classList?.contains("mw-heading")) {
+    if (["P", "DL", "OL", "UL"].includes(nextNode.tagName)) {
+      const clone = nextNode.cloneNode(true);
+      clone.querySelectorAll("sup, .reference, .mw-editsection, table, figure").forEach((child) => {
+        child.remove();
+      });
+      const text = cleanDefinitionText(clone.textContent);
+
+      if (
+        text &&
+        !isEditorialPlaceholderText(text) &&
+        !matchesBlockedHeadingTitle(text, config.blockedHeadingPatterns)
+      ) {
+        originParts.push(text);
+      }
+    }
+
+    if (originParts.length) {
+      break;
+    }
+
+    nextNode = nextNode.nextElementSibling;
+  }
+
+  return originParts[0] || "";
 }
 
 function extractEntryMetadata(html) {

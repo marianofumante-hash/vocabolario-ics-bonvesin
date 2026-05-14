@@ -60,7 +60,7 @@ In `app.js` esiste un filtro HTML che prova a rimuovere:
 ## Cache attuali
 
 - search: `vocabolario.searchCache.v6`
-- entry: `vocabolario.entryCache.v23`
+- entry: `vocabolario.entryCache.v24`
 - translation: `vocabolario.translationCache.v22`
 
 ## Traduzione
@@ -73,6 +73,7 @@ La traduzione attuale:
 - non mostra messaggi tecnici di cache nella pagina per studenti e insegnanti
 - mostra la prima spiegazione una sola volta nella testata della voce e rimuove la duplicazione dai dettagli
 - mostra il genere maschile/femminile/neutro solo quando viene riconosciuto dai dati disponibili
+- costruisce una riga dizionario minima con lemma, tipo abbreviato, genere, eventuale origine e spiegazione
 
 Nota pratica:
 
